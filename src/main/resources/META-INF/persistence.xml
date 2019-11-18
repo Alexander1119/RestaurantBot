@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="com.restaurant_bot_jar_0.0.1-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>com.restaurant.bot.domain.Foodlist</class>
+    <class>com.restaurant.bot.domain.Client</class>
+    <class>com.restaurant.bot.domain.FoodFoodlist</class>
+    <class>com.restaurant.bot.domain.Zone</class>
+    <class>com.restaurant.bot.domain.Place</class>
+    <class>com.restaurant.bot.domain.RestaurantFoodType</class>
+    <class>com.restaurant.bot.domain.TypeFood</class>
+    <class>com.restaurant.bot.domain.Timetable</class>
+    <class>com.restaurant.bot.domain.Street</class>
+    <class>com.restaurant.bot.domain.RestaurantTimetable</class>
+    <class>com.restaurant.bot.domain.Food</class>
+    <class>com.restaurant.bot.domain.Person</class>
+    <class>com.restaurant.bot.domain.Restaurant</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/restaurante"/>
+      <property name="javax.persistence.jdbc.user" value="postgres"/>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="carpooling"/>
+    </properties>
+  </persistence-unit>
+</persistence>
