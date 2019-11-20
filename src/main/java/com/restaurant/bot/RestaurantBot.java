@@ -13,12 +13,13 @@ import java.util.ArrayList;
 public class RestaurantBot extends TelegramLongPollingBot {
 
 
-    private ArrayList<Long> listChatId=new ArrayList<  >();
+    private ArrayList<ChatIdResponse> listChatId=new ArrayList<  >();
 
     private String[] inicio={"Ingrese nombre del restaurante","Ingrese la direccion del restaurante"};
     private String[] messageRegisterRestaurant={"Ingrese nombre del restaurante","Ingrese la direccion del restaurante"};
     private String[] messageRegisterClient={"Ingrese nombre del restaurante","Ingrese la direccion del restaurante"};
 
+    int startStep=0;
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -26,35 +27,65 @@ public class RestaurantBot extends TelegramLongPollingBot {
         String message_text = update.getMessage().getText();
         long chat_id = update.getMessage().getChatId();
 
-        if(searchNewId(chat_id)){
-            listChatId.add(chat_id);
+        ChatIdResponse chatIdResponse=new ChatIdResponse(chat_id,message_text);
+        SendMessage response=new SendMessage();
+
+        if(searchNewId(chatIdResponse)){
+            listChatId.add(chatIdResponse);
+            if(message_text!="/Inicio"){
+                        response.setChatId(chat_id);
+                        response.setText("/Inicio para empezar");
+                try {
+                    execute(response); // Sending our message object to user
+                }catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println();
+            }
         }else{
+            if(message_text!="/Inicio" && startStep==0){
+                        response.setChatId(chat_id);
+                        response.setText("/Inicio para empezar");
 
-
+            }else{
+                startStep=1;
+                response.setChatId(chat_id);
+                response.setText("Desea ingresar como /Cliente o /Restaurante");
+                messageUpdateChatId(new ChatIdResponse(update.getMessage().getChatId(),update.getMessage().getText()));
+            }
         }
-            SendMessage message = new SendMessage() // Create a message object object
-                        .setChatId(chat_id)
-                         .setText("   ////   ");
-
             try {
-                execute(message); // Sending our message object to user
+                execute(response); // Sending our message object to user
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
         }
 
 
-    public boolean searchNewId(Long Id){
+
+    public boolean searchNewId(ChatIdResponse chatIdResponse){
         boolean newChat=false;
         for(int i=0;i<listChatId.size();i++) {
 
-            if(listChatId.get(0) ==Id) {
+            if(listChatId.get(0).equals(chatIdResponse.chatId)) {
                 newChat=false;
             }else {
                 newChat = true;
             }
         }
         return newChat;
+    }
+
+    public void messageUpdateChatId(ChatIdResponse chatIdResponse){
+
+
+        for (int i=0;i<listChatId.size();i++){
+            if (listChatId.get(i).chatId== chatIdResponse.chatId){
+                listChatId.get(i).messageReceived=chatIdResponse.messageReceived;
+            }
+        }
+
     }
 
     @Override
