@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,10 +47,10 @@ public class Place implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "name_place")
     private String namePlace;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "placeId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "placeId", fetch = FetchType.LAZY)
     private Collection<Restaurant> restaurantCollection;
     @JoinColumn(name = "zone_id", referencedColumnName = "zone_id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Zone zoneId;
 
     public Place() {

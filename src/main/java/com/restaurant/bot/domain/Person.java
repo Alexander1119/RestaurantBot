@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -76,9 +77,11 @@ public class Person implements Serializable {
     @Column(name = "tx_date")
     @Temporal(TemporalType.DATE)
     private Date txDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId", fetch = FetchType.LAZY)
     private Collection<Restaurant> restaurantCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId", fetch = FetchType.LAZY)
+    private Collection<Chat> chatCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId", fetch = FetchType.LAZY)
     private Collection<Client> clientCollection;
 
     public Person() {
@@ -160,6 +163,14 @@ public class Person implements Serializable {
 
     public void setRestaurantCollection(Collection<Restaurant> restaurantCollection) {
         this.restaurantCollection = restaurantCollection;
+    }
+
+    public Collection<Chat> getChatCollection() {
+        return chatCollection;
+    }
+
+    public void setChatCollection(Collection<Chat> chatCollection) {
+        this.chatCollection = chatCollection;
     }
 
     public Collection<Client> getClientCollection() {

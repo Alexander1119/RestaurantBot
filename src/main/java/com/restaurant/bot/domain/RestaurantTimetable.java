@@ -9,6 +9,7 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,13 +37,13 @@ public class RestaurantTimetable implements Serializable {
     @Column(name = "id_restaurant_timetable")
     private Integer idRestaurantTimetable;
     @JoinColumn(name = "foodlist_id", referencedColumnName = "foodlist_id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Foodlist foodlistId;
     @JoinColumn(name = "restaurant_id", referencedColumnName = "restaurant_id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Restaurant restaurantId;
     @JoinColumn(name = "timetable_id", referencedColumnName = "timetable_id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Timetable timetableId;
 
     public RestaurantTimetable() {

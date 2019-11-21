@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -47,9 +48,9 @@ public class Zone implements Serializable {
     @Column(name = "name_zone")
     private String nameZone;
     @JoinColumn(name = "street_id", referencedColumnName = "street_id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Street streetId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "zoneId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "zoneId", fetch = FetchType.LAZY)
     private Collection<Place> placeCollection;
 
     public Zone() {

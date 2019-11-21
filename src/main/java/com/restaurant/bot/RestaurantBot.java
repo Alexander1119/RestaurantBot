@@ -59,7 +59,7 @@ public class RestaurantBot extends TelegramLongPollingBot {
                 messageUpdateChatId(new ChatIdResponse(update.getMessage().getChatId(),update.getMessage().getText()));
             }*/
         }
-           
+
         }
 
         public void responseStart(ChatIdResponse chatIdResponse){

@@ -15,6 +15,7 @@
     <class>com.restaurant.bot.domain.Food</class>
     <class>com.restaurant.bot.domain.Person</class>
     <class>com.restaurant.bot.domain.Restaurant</class>
+    <class>com.restaurant.bot.domain.Chat</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/restaurante"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>

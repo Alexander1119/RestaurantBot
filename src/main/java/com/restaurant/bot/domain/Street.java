@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,7 +45,7 @@ public class Street implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "name_street")
     private String nameStreet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "streetId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "streetId", fetch = FetchType.LAZY)
     private Collection<Zone> zoneCollection;
 
     public Street() {

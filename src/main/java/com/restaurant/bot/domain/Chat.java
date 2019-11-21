@@ -29,30 +29,40 @@ import javax.validation.constraints.Size;
  * @author ALEXANDER
  */
 @Entity
-@Table(name = "client")
+@Table(name = "chat")
 @NamedQueries({
-    @NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c"),
-    @NamedQuery(name = "Client.findByClientId", query = "SELECT c FROM Client c WHERE c.clientId = :clientId"),
-    @NamedQuery(name = "Client.findByBotUserId", query = "SELECT c FROM Client c WHERE c.botUserId = :botUserId"),
-    @NamedQuery(name = "Client.findByTxUser", query = "SELECT c FROM Client c WHERE c.txUser = :txUser"),
-    @NamedQuery(name = "Client.findByTxHost", query = "SELECT c FROM Client c WHERE c.txHost = :txHost"),
-    @NamedQuery(name = "Client.findByTxDate", query = "SELECT c FROM Client c WHERE c.txDate = :txDate")})
-public class Client implements Serializable {
+    @NamedQuery(name = "Chat.findAll", query = "SELECT c FROM Chat c"),
+    @NamedQuery(name = "Chat.findByChatId", query = "SELECT c FROM Chat c WHERE c.chatId = :chatId"),
+    @NamedQuery(name = "Chat.findByInMessage", query = "SELECT c FROM Chat c WHERE c.inMessage = :inMessage"),
+    @NamedQuery(name = "Chat.findByOutMessage", query = "SELECT c FROM Chat c WHERE c.outMessage = :outMessage"),
+    @NamedQuery(name = "Chat.findByMessageDate", query = "SELECT c FROM Chat c WHERE c.messageDate = :messageDate"),
+    @NamedQuery(name = "Chat.findByTxUser", query = "SELECT c FROM Chat c WHERE c.txUser = :txUser"),
+    @NamedQuery(name = "Chat.findByTxHost", query = "SELECT c FROM Chat c WHERE c.txHost = :txHost"),
+    @NamedQuery(name = "Chat.findByTxDate", query = "SELECT c FROM Chat c WHERE c.txDate = :txDate")})
+public class Chat implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "client_id")
-    private Integer clientId;
+    @Column(name = "chat_id")
+    private Integer chatId;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "bot_user_id")
-    private String botUserId;
+    @Size(min = 1, max = 500)
+    @Column(name = "in_message")
+    private String inMessage;
+    @Size(max = 500)
+    @Column(name = "out_message")
+    private String outMessage;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 100)
+    @Column(name = "message_date")
+    @Temporal(TemporalType.DATE)
+    private Date messageDate;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
     @Column(name = "tx_user")
     private String txUser;
     @Basic(optional = false)
@@ -69,35 +79,52 @@ public class Client implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Person personId;
 
-    public Client() {
+    public Chat() {
     }
 
-    public Client(Integer clientId) {
-        this.clientId = clientId;
+    public Chat(Integer chatId) {
+        this.chatId = chatId;
     }
 
-    public Client(Integer clientId, String botUserId, String txUser, String txHost, Date txDate) {
-        this.clientId = clientId;
-        this.botUserId = botUserId;
+    public Chat(Integer chatId, String inMessage, Date messageDate, String txUser, String txHost, Date txDate) {
+        this.chatId = chatId;
+        this.inMessage = inMessage;
+        this.messageDate = messageDate;
         this.txUser = txUser;
         this.txHost = txHost;
         this.txDate = txDate;
     }
 
-    public Integer getClientId() {
-        return clientId;
+    public Integer getChatId() {
+        return chatId;
     }
 
-    public void setClientId(Integer clientId) {
-        this.clientId = clientId;
+    public void setChatId(Integer chatId) {
+        this.chatId = chatId;
     }
 
-    public String getBotUserId() {
-        return botUserId;
+    public String getInMessage() {
+        return inMessage;
     }
 
-    public void setBotUserId(String botUserId) {
-        this.botUserId = botUserId;
+    public void setInMessage(String inMessage) {
+        this.inMessage = inMessage;
+    }
+
+    public String getOutMessage() {
+        return outMessage;
+    }
+
+    public void setOutMessage(String outMessage) {
+        this.outMessage = outMessage;
+    }
+
+    public Date getMessageDate() {
+        return messageDate;
+    }
+
+    public void setMessageDate(Date messageDate) {
+        this.messageDate = messageDate;
     }
 
     public String getTxUser() {
@@ -135,18 +162,18 @@ public class Client implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (clientId != null ? clientId.hashCode() : 0);
+        hash += (chatId != null ? chatId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Client)) {
+        if (!(object instanceof Chat)) {
             return false;
         }
-        Client other = (Client) object;
-        if ((this.clientId == null && other.clientId != null) || (this.clientId != null && !this.clientId.equals(other.clientId))) {
+        Chat other = (Chat) object;
+        if ((this.chatId == null && other.chatId != null) || (this.chatId != null && !this.chatId.equals(other.chatId))) {
             return false;
         }
         return true;
@@ -154,7 +181,7 @@ public class Client implements Serializable {
 
     @Override
     public String toString() {
-        return "com.restaurant.bot.domain.Client[ clientId=" + clientId + " ]";
+        return "com.restaurant.bot.domain.Chat[ chatId=" + chatId + " ]";
     }
     
 }
