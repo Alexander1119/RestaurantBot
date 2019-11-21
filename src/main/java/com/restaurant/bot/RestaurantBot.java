@@ -28,11 +28,14 @@ public class RestaurantBot extends TelegramLongPollingBot {
         long chat_id = update.getMessage().getChatId();
 
         ChatIdResponse chatIdResponse=new ChatIdResponse(chat_id,message_text);
-        SendMessage response=new SendMessage();
+        //SendMessage response=new SendMessage();
 
         if(searchNewId(chatIdResponse)){
-            listChatId.add(chatIdResponse);
-            if(message_text!="/Inicio"){
+            listChatId.add(chatIdResponse) ;
+
+            responseStart(chatIdResponse);
+
+            /*if(message_text!="/Inicio"){
                         response.setChatId(chat_id);
                         response.setText("/Inicio para empezar");
                 try {
@@ -42,8 +45,9 @@ public class RestaurantBot extends TelegramLongPollingBot {
                 }
 
                 System.out.println();
-            }
+            }*/
         }else{
+            /*
             if(message_text!="/Inicio" && startStep==0){
                         response.setChatId(chat_id);
                         response.setText("/Inicio para empezar");
@@ -53,17 +57,28 @@ public class RestaurantBot extends TelegramLongPollingBot {
                 response.setChatId(chat_id);
                 response.setText("Desea ingresar como /Cliente o /Restaurante");
                 messageUpdateChatId(new ChatIdResponse(update.getMessage().getChatId(),update.getMessage().getText()));
-            }
+            }*/
         }
-            try {
-                execute(response); // Sending our message object to user
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+           
         }
 
+        public void responseStart(ChatIdResponse chatIdResponse){
+
+            SendMessage message=new SendMessage();
+            switch (startStep){
+                case 0:
 
 
+
+                    break;
+                case 1:
+
+                    break;
+            }
+
+
+
+        }
     public boolean searchNewId(ChatIdResponse chatIdResponse){
         boolean newChat=false;
         for(int i=0;i<listChatId.size();i++) {
