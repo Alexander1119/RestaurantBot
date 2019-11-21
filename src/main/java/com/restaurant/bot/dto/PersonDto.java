@@ -1,5 +1,7 @@
 package com.restaurant.bot.dto;
 
+import com.restaurant.bot.domain.Person;
+
 public class PersonDto {
 
     private Integer person_id;
@@ -10,11 +12,10 @@ public class PersonDto {
     public PersonDto() {
     }
 
-    public PersonDto(Integer person_id, String first_name, String last_name, int cell_phone_num) {
-        this.person_id = person_id;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.cell_phone_num = cell_phone_num;
+    public PersonDto(Person person) {
+        this.first_name = person.getFirstName();
+        this.last_name = person.getLastName();
+        this.cell_phone_num = person.getCellPhoneNum();
     }
 
     public Integer getPerson_id() {
