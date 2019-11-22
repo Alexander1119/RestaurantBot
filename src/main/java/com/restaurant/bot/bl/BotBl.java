@@ -1,6 +1,6 @@
 package com.restaurant.bot.bl;
 
-import com.restaurant.bot.dao.CpClientRepository;
+import com.restaurant.bot.dao.CpUSerRepository;
 import com.restaurant.bot.dao.CpPersonRepository;
 import com.restaurant.bot.dao.CpRestaurantRepository;
 
@@ -19,13 +19,13 @@ public class BotBl {
 
     private static final Logger LOGGER= LoggerFactory.getLogger(BotBl.class);
 
-    private CpClientRepository cpClientRepository;
+    private CpUSerRepository cpUSerRepository;
     private CpPersonRepository cpPersonRepository;
     private CpRestaurantRepository cpRestaurantRepository;
 
     @Autowired
-    public BotBl(CpClientRepository cpClientRepository, CpPersonRepository cpPersonRepository, CpRestaurantRepository cpRestaurantRepository) {
-        this.cpClientRepository = cpClientRepository;
+    public BotBl(CpUSerRepository cpUSerRepository, CpPersonRepository cpPersonRepository, CpRestaurantRepository cpRestaurantRepository) {
+        this.cpUSerRepository = cpUSerRepository;
         this.cpPersonRepository = cpPersonRepository;
         this.cpRestaurantRepository = cpRestaurantRepository;
     }
