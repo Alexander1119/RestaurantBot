@@ -23,28 +23,30 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author ALEXANDER
  */
 @Entity
-@Table(name = "client")
+@Table(name = "r_user")
+@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c"),
-    @NamedQuery(name = "Client.findByClientId", query = "SELECT c FROM Client c WHERE c.clientId = :clientId"),
-    @NamedQuery(name = "Client.findByBotUserId", query = "SELECT c FROM Client c WHERE c.botUserId = :botUserId"),
-    @NamedQuery(name = "Client.findByTxUser", query = "SELECT c FROM Client c WHERE c.txUser = :txUser"),
-    @NamedQuery(name = "Client.findByTxHost", query = "SELECT c FROM Client c WHERE c.txHost = :txHost"),
-    @NamedQuery(name = "Client.findByTxDate", query = "SELECT c FROM Client c WHERE c.txDate = :txDate")})
-public class Client implements Serializable {
+    @NamedQuery(name = "RUser.findAll", query = "SELECT r FROM RUser r"),
+    @NamedQuery(name = "RUser.findByUserId", query = "SELECT r FROM RUser r WHERE r.userId = :userId"),
+    @NamedQuery(name = "RUser.findByBotUserId", query = "SELECT r FROM RUser r WHERE r.botUserId = :botUserId"),
+    @NamedQuery(name = "RUser.findByTxUser", query = "SELECT r FROM RUser r WHERE r.txUser = :txUser"),
+    @NamedQuery(name = "RUser.findByTxHost", query = "SELECT r FROM RUser r WHERE r.txHost = :txHost"),
+    @NamedQuery(name = "RUser.findByTxDate", query = "SELECT r FROM RUser r WHERE r.txDate = :txDate")})
+public class RUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "client_id")
-    private Integer clientId;
+    @Column(name = "user_id")
+    private Integer userId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -69,27 +71,27 @@ public class Client implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Person personId;
 
-    public Client() {
+    public RUser() {
     }
 
-    public Client(Integer clientId) {
-        this.clientId = clientId;
+    public RUser(Integer userId) {
+        this.userId = userId;
     }
 
-    public Client(Integer clientId, String botUserId, String txUser, String txHost, Date txDate) {
-        this.clientId = clientId;
+    public RUser(Integer userId, String botUserId, String txUser, String txHost, Date txDate) {
+        this.userId = userId;
         this.botUserId = botUserId;
         this.txUser = txUser;
         this.txHost = txHost;
         this.txDate = txDate;
     }
 
-    public Integer getClientId() {
-        return clientId;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setClientId(Integer clientId) {
-        this.clientId = clientId;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getBotUserId() {
@@ -135,18 +137,18 @@ public class Client implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (clientId != null ? clientId.hashCode() : 0);
+        hash += (userId != null ? userId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Client)) {
+        if (!(object instanceof RUser)) {
             return false;
         }
-        Client other = (Client) object;
-        if ((this.clientId == null && other.clientId != null) || (this.clientId != null && !this.clientId.equals(other.clientId))) {
+        RUser other = (RUser) object;
+        if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
             return false;
         }
         return true;
@@ -154,7 +156,7 @@ public class Client implements Serializable {
 
     @Override
     public String toString() {
-        return "com.restaurant.bot.domain.Client[ clientId=" + clientId + " ]";
+        return "com.restaurant.bot.domain.RUser[ userId=" + userId + " ]";
     }
     
 }

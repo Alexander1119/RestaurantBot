@@ -22,6 +22,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -29,6 +31,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "restaurant")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Restaurant.findAll", query = "SELECT r FROM Restaurant r"),
     @NamedQuery(name = "Restaurant.findByRestaurantId", query = "SELECT r FROM Restaurant r WHERE r.restaurantId = :restaurantId"),
@@ -100,6 +103,7 @@ public class Restaurant implements Serializable {
         this.placeId = placeId;
     }
 
+    @XmlTransient
     public Collection<RestaurantFoodType> getRestaurantFoodTypeCollection() {
         return restaurantFoodTypeCollection;
     }
@@ -108,6 +112,7 @@ public class Restaurant implements Serializable {
         this.restaurantFoodTypeCollection = restaurantFoodTypeCollection;
     }
 
+    @XmlTransient
     public Collection<RestaurantTimetable> getRestaurantTimetableCollection() {
         return restaurantTimetableCollection;
     }

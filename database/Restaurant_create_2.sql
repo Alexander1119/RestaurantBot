@@ -35,15 +35,15 @@ CREATE TABLE chat (
     CONSTRAINT chat_pk PRIMARY KEY (chat_id)
 );
 
--- Table: client
-CREATE TABLE client (
-    client_id serial  NOT NULL,
+-- Table: user
+CREATE TABLE user (
+    user_id serial  NOT NULL,
     person_id int  NOT NULL,
     bot_user_id varchar(100)  NOT NULL,
     tx_user varchar(100)  NOT NULL,
     tx_host varchar(100)  NOT NULL,
     tx_date date  NOT NULL,
-    CONSTRAINT client_pk PRIMARY KEY (client_id)
+    CONSTRAINT user_pk PRIMARY KEY (user_id)
 );
 
 -- Table: food
@@ -161,8 +161,8 @@ ALTER TABLE place ADD CONSTRAINT city_zone
     INITIALLY IMMEDIATE
 ;
 
--- Reference: client_Person (table: client)
-ALTER TABLE client ADD CONSTRAINT client_Person
+-- Reference: user_Person (table: user)
+ALTER TABLE user ADD CONSTRAINT user_Person
     FOREIGN KEY (person_id)
     REFERENCES Person (person_id)  
     NOT DEFERRABLE 

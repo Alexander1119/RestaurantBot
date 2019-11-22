@@ -23,6 +23,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -30,6 +32,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "place")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Place.findAll", query = "SELECT p FROM Place p"),
     @NamedQuery(name = "Place.findByPlaceId", query = "SELECT p FROM Place p WHERE p.placeId = :placeId"),
@@ -81,6 +84,7 @@ public class Place implements Serializable {
         this.namePlace = namePlace;
     }
 
+    @XmlTransient
     public Collection<Restaurant> getRestaurantCollection() {
         return restaurantCollection;
     }

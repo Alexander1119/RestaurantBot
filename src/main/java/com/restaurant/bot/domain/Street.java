@@ -21,6 +21,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -28,6 +30,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "street")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Street.findAll", query = "SELECT s FROM Street s"),
     @NamedQuery(name = "Street.findByStreetId", query = "SELECT s FROM Street s WHERE s.streetId = :streetId"),
@@ -76,6 +79,7 @@ public class Street implements Serializable {
         this.nameStreet = nameStreet;
     }
 
+    @XmlTransient
     public Collection<Zone> getZoneCollection() {
         return zoneCollection;
     }

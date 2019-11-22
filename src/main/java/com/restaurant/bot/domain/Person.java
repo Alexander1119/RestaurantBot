@@ -24,6 +24,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,6 +33,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "person")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p"),
     @NamedQuery(name = "Person.findByPersonId", query = "SELECT p FROM Person p WHERE p.personId = :personId"),
@@ -78,11 +81,11 @@ public class Person implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date txDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId", fetch = FetchType.LAZY)
+    private Collection<RUser> rUserCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId", fetch = FetchType.LAZY)
     private Collection<Restaurant> restaurantCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId", fetch = FetchType.LAZY)
     private Collection<Chat> chatCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId", fetch = FetchType.LAZY)
-    private Collection<Client> clientCollection;
 
     public Person() {
     }
@@ -157,6 +160,16 @@ public class Person implements Serializable {
         this.txDate = txDate;
     }
 
+    @XmlTransient
+    public Collection<RUser> getRUserCollection() {
+        return rUserCollection;
+    }
+
+    public void setRUserCollection(Collection<RUser> rUserCollection) {
+        this.rUserCollection = rUserCollection;
+    }
+
+    @XmlTransient
     public Collection<Restaurant> getRestaurantCollection() {
         return restaurantCollection;
     }
@@ -165,20 +178,13 @@ public class Person implements Serializable {
         this.restaurantCollection = restaurantCollection;
     }
 
+    @XmlTransient
     public Collection<Chat> getChatCollection() {
         return chatCollection;
     }
 
     public void setChatCollection(Collection<Chat> chatCollection) {
         this.chatCollection = chatCollection;
-    }
-
-    public Collection<Client> getClientCollection() {
-        return clientCollection;
-    }
-
-    public void setClientCollection(Collection<Client> clientCollection) {
-        this.clientCollection = clientCollection;
     }
 
     @Override
