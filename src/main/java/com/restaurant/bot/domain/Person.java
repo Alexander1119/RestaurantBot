@@ -81,11 +81,9 @@ public class Person implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date txDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId", fetch = FetchType.LAZY)
-    private Collection<RUser> rUserCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId", fetch = FetchType.LAZY)
     private Collection<Restaurant> restaurantCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId", fetch = FetchType.LAZY)
-    private Collection<Chat> chatCollection;
+    private Collection<Cpuser> cpuserCollection;
 
     public Person() {
     }
@@ -161,15 +159,6 @@ public class Person implements Serializable {
     }
 
     @XmlTransient
-    public Collection<RUser> getRUserCollection() {
-        return rUserCollection;
-    }
-
-    public void setRUserCollection(Collection<RUser> rUserCollection) {
-        this.rUserCollection = rUserCollection;
-    }
-
-    @XmlTransient
     public Collection<Restaurant> getRestaurantCollection() {
         return restaurantCollection;
     }
@@ -179,12 +168,12 @@ public class Person implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Chat> getChatCollection() {
-        return chatCollection;
+    public Collection<Cpuser> getCpuserCollection() {
+        return cpuserCollection;
     }
 
-    public void setChatCollection(Collection<Chat> chatCollection) {
-        this.chatCollection = chatCollection;
+    public void setCpuserCollection(Collection<Cpuser> cpuserCollection) {
+        this.cpuserCollection = cpuserCollection;
     }
 
     @Override

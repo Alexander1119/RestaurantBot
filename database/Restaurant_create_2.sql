@@ -36,9 +36,9 @@ CREATE TABLE chat (
 );
 
 -- Table: user
-CREATE TABLE user (
+CREATE TABLE r_user (
     user_id serial  NOT NULL,
-    person_id int  NOT NULL,
+    user_id int  NOT NULL,
     bot_user_id varchar(100)  NOT NULL,
     tx_user varchar(100)  NOT NULL,
     tx_host varchar(100)  NOT NULL,
@@ -145,10 +145,10 @@ ALTER TABLE Restaurant_food_type ADD CONSTRAINT Restaurant_food_type_type_food
     INITIALLY IMMEDIATE
 ;
 
--- Reference: chat_Person (table: chat)
-ALTER TABLE chat ADD CONSTRAINT chat_Person
-    FOREIGN KEY (person_id)
-    REFERENCES Person (person_id)  
+-- Reference: chat_User (table: chat)
+ALTER TABLE chat ADD CONSTRAINT chat_user
+    FOREIGN KEY (user_id)
+    REFERENCES r_user (user_id)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;

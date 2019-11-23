@@ -30,12 +30,29 @@ public class BotBl {
         this.cpRestaurantRepository = cpRestaurantRepository;
     }
 
-    public List<String> processUpdate(Update update){
+    public int processUpdate(Update update){
 
         LOGGER.info("Recibiendo update {}",update);
-        List<String> chatResponses=new ArrayList<>();
-        return null;
+        int responses=0;
+        if (!SearchIfNewUser(update)){
 
+
+
+        }
+
+
+        return 0;
+    }
+
+    public boolean SearchIfNewUser(Update update){
+        boolean ifNewUser=false;
+        CpUSerRepository cpUSerRepository = null;
+        Long ChatId=update.getMessage().getChatId();
+        if (cpUSerRepository.findByBotUserId(String.valueOf(ChatId))!=null)
+        {
+            ifNewUser=true;
+        }
+        return ifNewUser;
     }
 
 

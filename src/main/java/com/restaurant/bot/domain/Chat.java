@@ -77,9 +77,9 @@ public class Chat implements Serializable {
     @Column(name = "tx_date")
     @Temporal(TemporalType.DATE)
     private Date txDate;
-    @JoinColumn(name = "person_id", referencedColumnName = "person_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Person personId;
+    private Cpuser userId;
 
     public Chat() {
     }
@@ -153,12 +153,12 @@ public class Chat implements Serializable {
         this.txDate = txDate;
     }
 
-    public Person getPersonId() {
-        return personId;
+    public Cpuser getUserId() {
+        return userId;
     }
 
-    public void setPersonId(Person personId) {
-        this.personId = personId;
+    public void setUserId(Cpuser userId) {
+        this.userId = userId;
     }
 
     @Override
