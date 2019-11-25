@@ -3,7 +3,6 @@
   <persistence-unit name="com.restaurant_bot_jar_0.0.1-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.restaurant.bot.domain.Foodlist</class>
-    <class>com.restaurant.bot.domain.Client</class>
     <class>com.restaurant.bot.domain.FoodFoodlist</class>
     <class>com.restaurant.bot.domain.Zone</class>
     <class>com.restaurant.bot.domain.Place</class>
@@ -16,13 +15,9 @@
     <class>com.restaurant.bot.domain.Person</class>
     <class>com.restaurant.bot.domain.Restaurant</class>
     <class>com.restaurant.bot.domain.Chat</class>
-    <class>com.restaurant.bot.domain.User</class>
-    <class>com.restaurant.bot.domain.RestaurantTimetable_1</class>
-    <class>com.restaurant.bot.domain.Timetable_1</class>
-    <class>com.restaurant.bot.domain.RUser</class>
-    <class>com.restaurant.bot.domain.Cpuser</class>
+      <class>com.restaurant.bot.domain.Cpuser</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/restaurante"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/RestaurantDB"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
       <property name="javax.persistence.jdbc.password" value="carpooling"/>

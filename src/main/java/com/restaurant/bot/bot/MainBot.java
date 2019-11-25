@@ -4,6 +4,8 @@ import com.restaurant.bot.bl.BotBl;
 
 import com.restaurant.bot.dao.CpUSerRepository;
 import com.restaurant.bot.domain.Cpuser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -15,35 +17,40 @@ import java.util.List;
 
 public class MainBot extends TelegramLongPollingBot {
 
+    private static final Logger LOGGER= LoggerFactory.getLogger(MainBot.class);
 
     BotBl botBl;
-    Cpuser user;
     public MainBot(BotBl customerBl) {
         this.botBl = customerBl;
+    }
+    public MainBot() {
+
     }
 
 
     @Override
     public void onUpdateReceived(Update update) {
+        System.out.println(update);
+        update.getMessage().getFrom().getId();
+
         if (update.hasMessage() && update.getMessage().hasText()) {
+/*
+            SendMessage message = new SendMessage()
+                    .setChatId(update.getMessage().getChatId())
+                    .setText(update.getMessage().getText());
+            try {
+                this.execute(message);
 
-            int numbermessage = botBl.processUpdate(update);
-
-            List<String> listResponses = new ArrayList<>();
-
-            switch (numbermessage) {
-
-                case 1:
-                    listResponses.add("Bienvenido/nPrimero debes registrarte");
-                    listResponses.add("Ingresa tu apellido");
-                    break;
-                case 2:
-                    listResponses.add("Ingresa tus nombre");
-                    break;
-
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
             }
+*/
 
-            for (String messageText : listResponses) {
+
+            List<String> messages=botBl.processUpdate(update);
+
+            LOGGER.info(String.valueOf(messages));
+            for (String messageText : messages) {
                 SendMessage message = new SendMessage()
                         .setChatId(update.getMessage().getChatId())
                         .setText(messageText);
