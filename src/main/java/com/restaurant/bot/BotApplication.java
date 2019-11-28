@@ -13,16 +13,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 public class BotApplication {
 
 
-    static BotBl botBl=new BotBl();
-
     public static void main(String[] args) {
         ApiContextInitializer.init();
-        TelegramBotsApi botsApi=new TelegramBotsApi();
 
-        try {
-            botsApi.registerBot(new MainBot(botBl));
-        } catch (TelegramApiRequestException e) {
-            e.printStackTrace();
-        }
+        SpringApplication.run(BotApplication.class, args);
     }
 }
