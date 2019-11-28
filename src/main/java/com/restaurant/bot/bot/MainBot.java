@@ -27,25 +27,12 @@ public class MainBot extends TelegramLongPollingBot {
 
     }
 
-
     @Override
     public void onUpdateReceived(Update update) {
         System.out.println(update);
         update.getMessage().getFrom().getId();
 
         if (update.hasMessage() && update.getMessage().hasText()) {
-/*
-            SendMessage message = new SendMessage()
-                    .setChatId(update.getMessage().getChatId())
-                    .setText(update.getMessage().getText());
-            try {
-                this.execute(message);
-
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
-*/
-
 
             List<String> messages=botBl.processUpdate(update);
 
@@ -62,9 +49,7 @@ public class MainBot extends TelegramLongPollingBot {
                 }
             }
         }
-
     }
-
 
     public boolean SearchIfNewUser(Update update){
         boolean ifNewUser=false;

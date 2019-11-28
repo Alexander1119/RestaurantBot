@@ -1,5 +1,6 @@
 package com.restaurant.bot.bl;
 
+import com.restaurant.bot.ResponsesReturn;
 import com.restaurant.bot.dao.CpChatRepository;
 import com.restaurant.bot.dao.CpUSerRepository;
 import com.restaurant.bot.dao.CpPersonRepository;
@@ -31,7 +32,8 @@ public class BotBl {
     private CpRestaurantRepository cpRestaurantRepository;
     private CpChatRepository cpChatRepository;
 
-    private String[] list={"-","Bienvenido/nPrimero debes registrarte/nIngresa tus apellidos","Ingresa tu nombre"};
+    private String[] list={"-","Bienvenido a RestaurantBot\n" +
+                            "Sus datos son los siguientes: \n Desea cambiar o guardar "};
 
     @Autowired
     public BotBl(CpUSerRepository cpUSerRepository, CpPersonRepository cpPersonRepository, CpRestaurantRepository cpRestaurantRepository, CpChatRepository cpChatRepository) {
@@ -61,43 +63,62 @@ public class BotBl {
 
     private void continueChatWhitUser(Update update, Cpuser user,List<String> chatResponses){
         Chat lastMessage=cpChatRepository.findLastChatByUserId(user.getUserId());
-        String responses = null;
-        int step=1;
+        ResponsesReturn responses = null;
         if (lastMessage==null){
-            responses=SearchListResponses(list,step);
+            responses=listResponses(0,"-",update.getMessage().getFrom());
         }else{
-
-            try{
                 int lastMessageInt=Integer.parseInt(lastMessage.getOutMessage());
-                responses=SearchListResponses(list,lastMessageInt);
-            }catch (NumberFormatException e){
-                responses=SearchListResponses(list,step);
-            }
-
-
+                responses=listResponses(lastMessageInt,lastMessage.getInMessage(),update.getMessage().getFrom());
         }
         LOGGER.info("PROCESSING IN MESSAGE: {} from user {}" ,update.getMessage().getText(), user.getUserId());
         Chat chat=new Chat();
         chat.setUserId(user);
         chat.setInMessage(update.getMessage().getText());
-        chat.setOutMessage(responses);
+        chat.setOutMessage(String.valueOf(responses.getStep()));
         chat.setMessageDate(new Date());
         chat.setTxDate(new Date());
         chat.setTxUser(user.getUserId().toString());
         chat.setTxHost(update.getMessage().getChatId().toString());
-
         cpChatRepository.save(chat);
-        chatResponses.add(responses);
+        //LOGGER.info("THE MESSAGE SAVE AS: {}", chat.toString());
+
+        chatResponses.add(responses.getResponses());
     }
 
-    private String SearchListResponses(String[] list,int numberresponses){
+    private ResponsesReturn listResponses(int numberout, String messagereceived, User user){
         String responses=null;
-        for (int i=0;i<list.length;i++){
-            if(i==numberresponses){
-                responses=list[i];
-            }
+        ResponsesReturn responsesReturn=new ResponsesReturn();
+        switch (numberout){
+            case 0:
+                        responsesReturn.setResponses("Bienvenido a RestaurantBot" +
+                        "\nSus datos son los siguientes\n"+
+                        user.getFirstName()+"  "+user.getLastName()+"\n"+
+                                "Son correctos /Si /No");
+                        responsesReturn.setStep(1);
+
+                break;
+            case 1:
+                if (messagereceived==("Si") || messagereceived==("/Si") || messagereceived.equals("si") || messagereceived.equals("/si")) {
+                    responsesReturn.setResponses("Los datos se guardaran  " + user.getFirstName());
+                    responsesReturn.setStep(2);
+                    break;
+                }if (messagereceived.equals("No") || messagereceived.equals("/No")){
+                    responsesReturn.setResponses("Los datos se cambiaran"+ user.getFirstName());
+                    responsesReturn.setStep(2);
+                    break;
+                }else{
+                    responsesReturn.setResponses("Debe elegir entre si o no "+ user.getFirstName());
+                    responsesReturn.setStep(1);
+                    break;
+                }
+
+            case 2:
+                responsesReturn.setResponses("Este es el tercer mensaje" +user.getFirstName());
+                responsesReturn.setStep(2);
+                break;
+
         }
-        return responses;
+        return responsesReturn;
     }
     public boolean SearchIfNewUser(Update update){
         boolean ifNewUser=false;
