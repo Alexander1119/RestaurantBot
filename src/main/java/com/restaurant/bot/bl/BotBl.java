@@ -81,7 +81,6 @@ public class BotBl {
         chat.setTxHost(update.getMessage().getChatId().toString());
         cpChatRepository.save(chat);
         //LOGGER.info("THE MESSAGE SAVE AS: {}", chat.toString());
-
         chatResponses.add(responses.getResponses());
     }
 

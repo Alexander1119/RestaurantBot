@@ -29,9 +29,9 @@ public class MainBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        LOGGER.info(String.valueOf(update.getMessage().getChat()));
         System.out.println(update);
         update.getMessage().getFrom().getId();
-
         if (update.hasMessage() && update.getMessage().hasText()) {
 
             List<String> messages=botBl.processUpdate(update);
@@ -63,12 +63,12 @@ public class MainBot extends TelegramLongPollingBot {
     }
     @Override
     public String getBotUsername() {
-        return "BotRestaurant_Bot";
+        return "NefertitiBot";
     }
 
     @Override
     public String getBotToken() {
-        return "941260126:AAHg7GOLiBUxbFP14QsgcWENfu0Qt_dP7mc";
+        return "852637482:AAHRFn6er6MknsLoMnysO6rlTILVzON6ipE";
     }
 
 
