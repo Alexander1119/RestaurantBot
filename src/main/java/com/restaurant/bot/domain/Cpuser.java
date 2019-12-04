@@ -13,8 +13,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -47,8 +45,8 @@ public class Cpuser implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
     @Column(name = "user_id")
     private Integer userId;
     @Basic(optional = false)
@@ -71,11 +69,11 @@ public class Cpuser implements Serializable {
     @Column(name = "tx_date")
     @Temporal(TemporalType.DATE)
     private Date txDate;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId", fetch = FetchType.LAZY)
+    private Collection<Chat> chatCollection;
     @JoinColumn(name = "person_id", referencedColumnName = "person_id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Person personId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId", fetch = FetchType.LAZY)
-    private Collection<Chat> chatCollection;
 
     public Cpuser() {
     }
@@ -132,14 +130,6 @@ public class Cpuser implements Serializable {
         this.txDate = txDate;
     }
 
-    public Person getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(Person personId) {
-        this.personId = personId;
-    }
-
     @XmlTransient
     public Collection<Chat> getChatCollection() {
         return chatCollection;
@@ -147,6 +137,14 @@ public class Cpuser implements Serializable {
 
     public void setChatCollection(Collection<Chat> chatCollection) {
         this.chatCollection = chatCollection;
+    }
+
+    public Person getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(Person personId) {
+        this.personId = personId;
     }
 
     @Override
