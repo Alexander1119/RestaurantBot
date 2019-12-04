@@ -142,7 +142,7 @@ public class BotBl {
                  person.setFirstName(user.getFirstName());
                  person.setLastName(user.getLastName());
                  person.setCellPhoneNum(123456789);
-                 person.setTxHost("localhost");
+                 person.setTxHost("loca lhost");
                  person.setTxUser("admin");
                  person.setTxDate(new Date());
                  cpPersonRepository.save(person);
