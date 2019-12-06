@@ -26,8 +26,7 @@ public class MainBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        LOGGER.info(String.valueOf(update.getMessage().getChat()));
-        System.out.println(update);
+        LOGGER.info(String.valueOf(update));
         update.getMessage().getFrom().getId();
         if (update.hasMessage() && update.getMessage().hasText()) {
 

@@ -65,16 +65,17 @@ public class BotBl {
         Chat lastMessage=cpChatRepository.findLastChatByUserId(user.getUserId());
         ResponsesReturn responses = null;
         if (lastMessage==null){
-            responses=listResponses(0,"-",update.getMessage().getFrom());
+            responses=listResponses(1,1,"-",update);
         }else{
-                int lastMessageInt=Integer.parseInt(lastMessage.getOutMessage());
-                responses=listResponses(lastMessageInt,lastMessage.getInMessage(),update.getMessage().getFrom());
+                responses=listResponses(lastMessage.getConversationId(),lastMessage.getMessageId(),lastMessage.getOutMessage(),update);
         }
         LOGGER.info("PROCESSING IN MESSAGE: {} from user {}" ,update.getMessage().getText(), user.getUserId());
         Chat chat=new Chat();
         chat.setUserId(user);
+        chat.setConversationId(responses.getConversation());
+        chat.setMessageId(responses.getMessage());
         chat.setInMessage(update.getMessage().getText());
-        chat.setOutMessage(String.valueOf(responses.getStep()));
+        chat.setOutMessage(responses.getResponses());
         chat.setMessageDate(new Date());
         chat.setTxDate(new Date());
         chat.setTxUser(user.getUserId().toString());
@@ -84,38 +85,20 @@ public class BotBl {
         chatResponses.add(responses.getResponses());
     }
 
-    private ResponsesReturn listResponses(int numberout, String messagereceived, User user){
-        String responses=null;
+    private ResponsesReturn listResponses(int conversation,int message, String messagereceived, Update update){
         ResponsesReturn responsesReturn=new ResponsesReturn();
-        switch (numberout){
+        switch (conversation){
             case 0:
                         responsesReturn.setResponses("Bienvenido a RestaurantBot" +
                         "\nSus datos son los siguientes\n"+
-                        user.getFirstName()+"  "+user.getLastName()+"\n"+
-                                "Son correctos /Si /No");
-                        responsesReturn.setStep(1);
+                        update.getMessage().getFrom().getFirstName()+"  "+update.getMessage().getFrom().getLastName());
+                        responsesReturn.setMessage(1);
 
                 break;
             case 1:
-                if (messagereceived==("Si") || messagereceived==("/Si") || messagereceived.equals("si") || messagereceived.equals("/si")) {
-                    responsesReturn.setResponses("Los datos se guardaran  " + user.getFirstName());
-                    responsesReturn.setStep(2);
-                    break;
-                }if (messagereceived.equals("No") || messagereceived.equals("/No")){
-                    responsesReturn.setResponses("Los datos se cambiaran"+ user.getFirstName());
-                    responsesReturn.setStep(2);
-                    break;
-                }else{
-                    responsesReturn.setResponses("Debe elegir entre si o no "+ user.getFirstName());
-                    responsesReturn.setStep(1);
-                    break;
-                }
-
-            case 2:
-                responsesReturn.setResponses("Este es el tercer mensaje" +user.getFirstName());
-                responsesReturn.setStep(2);
-                break;
-
+                    RestaurantBl restaurantBl=new RestaurantBl();
+                    responsesReturn=restaurantBl.restaurantRegister(conversation,message,messagereceived,update);
+                    LOGGER.info(responsesReturn.getResponses()+" "+responsesReturn.getConversation()+"  "+responsesReturn.getMessage());
         }
         return responsesReturn;
     }

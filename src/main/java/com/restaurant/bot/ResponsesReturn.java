@@ -2,14 +2,15 @@ package com.restaurant.bot;
 
 public class ResponsesReturn {
     String responses;
-    int step;
+    int conversation;
+    int message;
 
     public ResponsesReturn() {
     }
 
     public ResponsesReturn(String responses, int step) {
         this.responses = responses;
-        this.step = step;
+        this.message = step;
     }
 
     public String getResponses() {
@@ -20,11 +21,19 @@ public class ResponsesReturn {
         this.responses = responses;
     }
 
-    public int getStep() {
-        return step;
+    public int getMessage() {
+        return message;
     }
 
-    public void setStep(int step) {
-        this.step = step;
+    public void setMessage(int step) {
+        this.message = step;
+    }
+
+    public int getConversation() {
+        return conversation;
+    }
+
+    public void setConversation(int conversation) {
+        this.conversation = conversation;
     }
 }
