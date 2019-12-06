@@ -11,6 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -33,6 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Chat.findAll", query = "SELECT c FROM Chat c"),
     @NamedQuery(name = "Chat.findByChatId", query = "SELECT c FROM Chat c WHERE c.chatId = :chatId"),
+    @NamedQuery(name = "Chat.findByConversationId", query = "SELECT c FROM Chat c WHERE c.conversationId = :conversationId"),
+    @NamedQuery(name = "Chat.findByMessageId", query = "SELECT c FROM Chat c WHERE c.messageId = :messageId"),
     @NamedQuery(name = "Chat.findByInMessage", query = "SELECT c FROM Chat c WHERE c.inMessage = :inMessage"),
     @NamedQuery(name = "Chat.findByOutMessage", query = "SELECT c FROM Chat c WHERE c.outMessage = :outMessage"),
     @NamedQuery(name = "Chat.findByMessageDate", query = "SELECT c FROM Chat c WHERE c.messageDate = :messageDate"),
@@ -43,16 +47,26 @@ public class Chat implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "chat_id")
     private Integer chatId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "conversation_id")
+    private int conversationId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "message_id")
+    private int messageId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 500)
     @Column(name = "in_message")
     private String inMessage;
-    @Size(max = 500)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 500)
     @Column(name = "out_message")
     private String outMessage;
     @Basic(optional = false)
@@ -62,7 +76,7 @@ public class Chat implements Serializable {
     private Date messageDate;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 100)
     @Column(name = "tx_user")
     private String txUser;
     @Basic(optional = false)
@@ -86,9 +100,12 @@ public class Chat implements Serializable {
         this.chatId = chatId;
     }
 
-    public Chat(Integer chatId, String inMessage, Date messageDate, String txUser, String txHost, Date txDate) {
+    public Chat(Integer chatId, int conversationId, int messageId, String inMessage, String outMessage, Date messageDate, String txUser, String txHost, Date txDate) {
         this.chatId = chatId;
+        this.conversationId = conversationId;
+        this.messageId = messageId;
         this.inMessage = inMessage;
+        this.outMessage = outMessage;
         this.messageDate = messageDate;
         this.txUser = txUser;
         this.txHost = txHost;
@@ -101,6 +118,22 @@ public class Chat implements Serializable {
 
     public void setChatId(Integer chatId) {
         this.chatId = chatId;
+    }
+
+    public int getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(int conversationId) {
+        this.conversationId = conversationId;
+    }
+
+    public int getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(int messageId) {
+        this.messageId = messageId;
     }
 
     public String getInMessage() {

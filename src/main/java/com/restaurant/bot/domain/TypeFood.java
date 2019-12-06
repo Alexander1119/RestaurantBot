@@ -6,21 +6,21 @@
 package com.restaurant.bot.domain;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,65 +31,65 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TypeFood.findAll", query = "SELECT t FROM TypeFood t"),
-    @NamedQuery(name = "TypeFood.findByIdTypeFood", query = "SELECT t FROM TypeFood t WHERE t.idTypeFood = :idTypeFood"),
-    @NamedQuery(name = "TypeFood.findByNameType", query = "SELECT t FROM TypeFood t WHERE t.nameType = :nameType")})
+    @NamedQuery(name = "TypeFood.findByTypefoodId", query = "SELECT t FROM TypeFood t WHERE t.typefoodId = :typefoodId"),
+    @NamedQuery(name = "TypeFood.findByTypefoodName", query = "SELECT t FROM TypeFood t WHERE t.typefoodName = :typefoodName")})
 public class TypeFood implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "typefood_id")
+    private Integer typefoodId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "id_type_food")
-    private Integer idTypeFood;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "name_type")
-    private String nameType;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTypeFood", fetch = FetchType.LAZY)
-    private Collection<RestaurantFoodType> restaurantFoodTypeCollection;
+    @Size(min = 1, max = 100)
+    @Column(name = "typefood_name")
+    private String typefoodName;
+    @JoinColumn(name = "restaurant_id", referencedColumnName = "restaurant_id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Restaurant restaurantId;
 
     public TypeFood() {
     }
 
-    public TypeFood(Integer idTypeFood) {
-        this.idTypeFood = idTypeFood;
+    public TypeFood(Integer typefoodId) {
+        this.typefoodId = typefoodId;
     }
 
-    public TypeFood(Integer idTypeFood, String nameType) {
-        this.idTypeFood = idTypeFood;
-        this.nameType = nameType;
+    public TypeFood(Integer typefoodId, String typefoodName) {
+        this.typefoodId = typefoodId;
+        this.typefoodName = typefoodName;
     }
 
-    public Integer getIdTypeFood() {
-        return idTypeFood;
+    public Integer getTypefoodId() {
+        return typefoodId;
     }
 
-    public void setIdTypeFood(Integer idTypeFood) {
-        this.idTypeFood = idTypeFood;
+    public void setTypefoodId(Integer typefoodId) {
+        this.typefoodId = typefoodId;
     }
 
-    public String getNameType() {
-        return nameType;
+    public String getTypefoodName() {
+        return typefoodName;
     }
 
-    public void setNameType(String nameType) {
-        this.nameType = nameType;
+    public void setTypefoodName(String typefoodName) {
+        this.typefoodName = typefoodName;
     }
 
-    @XmlTransient
-    public Collection<RestaurantFoodType> getRestaurantFoodTypeCollection() {
-        return restaurantFoodTypeCollection;
+    public Restaurant getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setRestaurantFoodTypeCollection(Collection<RestaurantFoodType> restaurantFoodTypeCollection) {
-        this.restaurantFoodTypeCollection = restaurantFoodTypeCollection;
+    public void setRestaurantId(Restaurant restaurantId) {
+        this.restaurantId = restaurantId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idTypeFood != null ? idTypeFood.hashCode() : 0);
+        hash += (typefoodId != null ? typefoodId.hashCode() : 0);
         return hash;
     }
 
@@ -100,7 +100,7 @@ public class TypeFood implements Serializable {
             return false;
         }
         TypeFood other = (TypeFood) object;
-        if ((this.idTypeFood == null && other.idTypeFood != null) || (this.idTypeFood != null && !this.idTypeFood.equals(other.idTypeFood))) {
+        if ((this.typefoodId == null && other.typefoodId != null) || (this.typefoodId != null && !this.typefoodId.equals(other.typefoodId))) {
             return false;
         }
         return true;
@@ -108,7 +108,7 @@ public class TypeFood implements Serializable {
 
     @Override
     public String toString() {
-        return "com.restaurant.bot.domain.TypeFood[ idTypeFood=" + idTypeFood + " ]";
+        return "com.restaurant.bot.domain.TypeFood[ typefoodId=" + typefoodId + " ]";
     }
     
 }

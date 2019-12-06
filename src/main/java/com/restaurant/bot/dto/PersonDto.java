@@ -15,7 +15,7 @@ public class PersonDto {
     public PersonDto(Person person) {
         this.first_name = person.getFirstName();
         this.last_name = person.getLastName();
-        this.cell_phone_num = person.getCellPhoneNum();
+     // this.cell_phone_num = person.getCellPhoneNum();
     }
 
     public Integer getPerson_id() {

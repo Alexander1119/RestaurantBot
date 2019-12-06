@@ -13,7 +13,7 @@ public class RestaurantDto {
     private String images;
     private String date;
     private List<PersonDto> personList;
-    private List<PlaceDto> placeList;
+    //private List<PlaceDto> placeList;
 
     public RestaurantDto() {
     }
@@ -94,11 +94,11 @@ public class RestaurantDto {
         this.personList = personList;
     }
 
-    public List<PlaceDto> getPlaceList() {
-        return placeList;
-    }
+   // public List<PlaceDto> getPlaceList() {
+   //     return placeList;
+   // }
 
-    public void setPlaceList(List<PlaceDto> placeList) {
-        this.placeList = placeList;
-    }
+    //public void setPlaceList(List<PlaceDto> placeList) {
+      //  this.placeList = placeList;
+    //}
 }

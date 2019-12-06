@@ -7,21 +7,21 @@ package com.restaurant.bot.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,23 +32,23 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Food.findAll", query = "SELECT f FROM Food f"),
-    @NamedQuery(name = "Food.findByIdFood", query = "SELECT f FROM Food f WHERE f.idFood = :idFood"),
-    @NamedQuery(name = "Food.findByNameFood", query = "SELECT f FROM Food f WHERE f.nameFood = :nameFood"),
+    @NamedQuery(name = "Food.findByFoodId", query = "SELECT f FROM Food f WHERE f.foodId = :foodId"),
+    @NamedQuery(name = "Food.findByFoodName", query = "SELECT f FROM Food f WHERE f.foodName = :foodName"),
     @NamedQuery(name = "Food.findByCost", query = "SELECT f FROM Food f WHERE f.cost = :cost"),
     @NamedQuery(name = "Food.findByStatus", query = "SELECT f FROM Food f WHERE f.status = :status")})
 public class Food implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "id_food")
-    private Integer idFood;
+    @Column(name = "food_id")
+    private Integer foodId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
-    @Column(name = "name_food")
-    private String nameFood;
+    @Column(name = "food_name")
+    private String foodName;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
@@ -58,37 +58,38 @@ public class Food implements Serializable {
     @NotNull
     @Column(name = "status")
     private int status;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idFood", fetch = FetchType.LAZY)
-    private Collection<FoodFoodlist> foodFoodlistCollection;
+    @JoinColumn(name = "foodlist_id", referencedColumnName = "foodlist_id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private FoodList foodlistId;
 
     public Food() {
     }
 
-    public Food(Integer idFood) {
-        this.idFood = idFood;
+    public Food(Integer foodId) {
+        this.foodId = foodId;
     }
 
-    public Food(Integer idFood, String nameFood, BigDecimal cost, int status) {
-        this.idFood = idFood;
-        this.nameFood = nameFood;
+    public Food(Integer foodId, String foodName, BigDecimal cost, int status) {
+        this.foodId = foodId;
+        this.foodName = foodName;
         this.cost = cost;
         this.status = status;
     }
 
-    public Integer getIdFood() {
-        return idFood;
+    public Integer getFoodId() {
+        return foodId;
     }
 
-    public void setIdFood(Integer idFood) {
-        this.idFood = idFood;
+    public void setFoodId(Integer foodId) {
+        this.foodId = foodId;
     }
 
-    public String getNameFood() {
-        return nameFood;
+    public String getFoodName() {
+        return foodName;
     }
 
-    public void setNameFood(String nameFood) {
-        this.nameFood = nameFood;
+    public void setFoodName(String foodName) {
+        this.foodName = foodName;
     }
 
     public BigDecimal getCost() {
@@ -107,19 +108,18 @@ public class Food implements Serializable {
         this.status = status;
     }
 
-    @XmlTransient
-    public Collection<FoodFoodlist> getFoodFoodlistCollection() {
-        return foodFoodlistCollection;
+    public FoodList getFoodlistId() {
+        return foodlistId;
     }
 
-    public void setFoodFoodlistCollection(Collection<FoodFoodlist> foodFoodlistCollection) {
-        this.foodFoodlistCollection = foodFoodlistCollection;
+    public void setFoodlistId(FoodList foodlistId) {
+        this.foodlistId = foodlistId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idFood != null ? idFood.hashCode() : 0);
+        hash += (foodId != null ? foodId.hashCode() : 0);
         return hash;
     }
 
@@ -130,7 +130,7 @@ public class Food implements Serializable {
             return false;
         }
         Food other = (Food) object;
-        if ((this.idFood == null && other.idFood != null) || (this.idFood != null && !this.idFood.equals(other.idFood))) {
+        if ((this.foodId == null && other.foodId != null) || (this.foodId != null && !this.foodId.equals(other.foodId))) {
             return false;
         }
         return true;
@@ -138,7 +138,7 @@ public class Food implements Serializable {
 
     @Override
     public String toString() {
-        return "com.restaurant.bot.domain.Food[ idFood=" + idFood + " ]";
+        return "com.restaurant.bot.domain.Food[ foodId=" + foodId + " ]";
     }
     
 }

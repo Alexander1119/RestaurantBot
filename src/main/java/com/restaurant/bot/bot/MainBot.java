@@ -3,7 +3,6 @@ package com.restaurant.bot.bot;
 import com.restaurant.bot.bl.BotBl;
 
 import com.restaurant.bot.dao.CpUSerRepository;
-import com.restaurant.bot.domain.Cpuser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -11,8 +10,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainBot extends TelegramLongPollingBot {
@@ -63,13 +60,12 @@ public class MainBot extends TelegramLongPollingBot {
     }
     @Override
     public String getBotUsername() {
-        return "NefertitiBot";
+        return "BotRestaurant_Bot";
     }
 
     @Override
     public String getBotToken() {
-        return "852637482:AAHRFn6er6MknsLoMnysO6rlTILVzON6ipE";
+        return "941260126:AAHg7GOLiBUxbFP14QsgcWENfu0Qt_dP7mc";
     }
-
-
 }
+

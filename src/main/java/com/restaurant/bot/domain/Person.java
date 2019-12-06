@@ -13,6 +13,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -37,7 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Person.findByPersonId", query = "SELECT p FROM Person p WHERE p.personId = :personId"),
     @NamedQuery(name = "Person.findByFirstName", query = "SELECT p FROM Person p WHERE p.firstName = :firstName"),
     @NamedQuery(name = "Person.findByLastName", query = "SELECT p FROM Person p WHERE p.lastName = :lastName"),
-    @NamedQuery(name = "Person.findByCellPhoneNum", query = "SELECT p FROM Person p WHERE p.cellPhoneNum = :cellPhoneNum"),
+    @NamedQuery(name = "Person.findByCellphoneNumber", query = "SELECT p FROM Person p WHERE p.cellphoneNumber = :cellphoneNumber"),
+    @NamedQuery(name = "Person.findByStatus", query = "SELECT p FROM Person p WHERE p.status = :status"),
     @NamedQuery(name = "Person.findByTxUser", query = "SELECT p FROM Person p WHERE p.txUser = :txUser"),
     @NamedQuery(name = "Person.findByTxHost", query = "SELECT p FROM Person p WHERE p.txHost = :txHost"),
     @NamedQuery(name = "Person.findByTxDate", query = "SELECT p FROM Person p WHERE p.txDate = :txDate")})
@@ -45,24 +48,28 @@ public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "person_id")
     private Integer personId;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 100)
     @Column(name = "first_name")
     private String firstName;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 100)
     @Column(name = "last_name")
     private String lastName;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "cell_phone_num")
-    private int cellPhoneNum;
+    @Column(name = "cellphone_number")
+    private int cellphoneNumber;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "status")
+    private int status;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -90,11 +97,12 @@ public class Person implements Serializable {
         this.personId = personId;
     }
 
-    public Person(Integer personId, String firstName, String lastName, int cellPhoneNum, String txUser, String txHost, Date txDate) {
+    public Person(Integer personId, String firstName, String lastName, int cellphoneNumber, int status, String txUser, String txHost, Date txDate) {
         this.personId = personId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.cellPhoneNum = cellPhoneNum;
+        this.cellphoneNumber = cellphoneNumber;
+        this.status = status;
         this.txUser = txUser;
         this.txHost = txHost;
         this.txDate = txDate;
@@ -124,12 +132,20 @@ public class Person implements Serializable {
         this.lastName = lastName;
     }
 
-    public int getCellPhoneNum() {
-        return cellPhoneNum;
+    public int getCellphoneNumber() {
+        return cellphoneNumber;
     }
 
-    public void setCellPhoneNum(int cellPhoneNum) {
-        this.cellPhoneNum = cellPhoneNum;
+    public void setCellphoneNumber(int cellphoneNumber) {
+        this.cellphoneNumber = cellphoneNumber;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getTxUser() {

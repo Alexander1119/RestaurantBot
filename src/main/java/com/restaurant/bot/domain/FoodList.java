@@ -12,7 +12,11 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -26,37 +30,38 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ALEXANDER
  */
 @Entity
-@Table(name = "foodlist")
+@Table(name = "food_list")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Foodlist.findAll", query = "SELECT f FROM Foodlist f"),
-    @NamedQuery(name = "Foodlist.findByFoodlistId", query = "SELECT f FROM Foodlist f WHERE f.foodlistId = :foodlistId"),
-    @NamedQuery(name = "Foodlist.findByStatus", query = "SELECT f FROM Foodlist f WHERE f.status = :status")})
-public class Foodlist implements Serializable {
+    @NamedQuery(name = "FoodList.findAll", query = "SELECT f FROM FoodList f"),
+    @NamedQuery(name = "FoodList.findByFoodlistId", query = "SELECT f FROM FoodList f WHERE f.foodlistId = :foodlistId"),
+    @NamedQuery(name = "FoodList.findByStatus", query = "SELECT f FROM FoodList f WHERE f.status = :status")})
+public class FoodList implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "foodlist_id")
     private Integer foodlistId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "status")
     private int status;
+    @JoinColumn(name = "timetable_id", referencedColumnName = "timetable_id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Timetable timetableId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "foodlistId", fetch = FetchType.LAZY)
-    private Collection<RestaurantTimetable> restaurantTimetableCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "foodlistId", fetch = FetchType.LAZY)
-    private Collection<FoodFoodlist> foodFoodlistCollection;
+    private Collection<Food> foodCollection;
 
-    public Foodlist() {
+    public FoodList() {
     }
 
-    public Foodlist(Integer foodlistId) {
+    public FoodList(Integer foodlistId) {
         this.foodlistId = foodlistId;
     }
 
-    public Foodlist(Integer foodlistId, int status) {
+    public FoodList(Integer foodlistId, int status) {
         this.foodlistId = foodlistId;
         this.status = status;
     }
@@ -77,22 +82,21 @@ public class Foodlist implements Serializable {
         this.status = status;
     }
 
+    public Timetable getTimetableId() {
+        return timetableId;
+    }
+
+    public void setTimetableId(Timetable timetableId) {
+        this.timetableId = timetableId;
+    }
+
     @XmlTransient
-    public Collection<RestaurantTimetable> getRestaurantTimetableCollection() {
-        return restaurantTimetableCollection;
+    public Collection<Food> getFoodCollection() {
+        return foodCollection;
     }
 
-    public void setRestaurantTimetableCollection(Collection<RestaurantTimetable> restaurantTimetableCollection) {
-        this.restaurantTimetableCollection = restaurantTimetableCollection;
-    }
-
-    @XmlTransient
-    public Collection<FoodFoodlist> getFoodFoodlistCollection() {
-        return foodFoodlistCollection;
-    }
-
-    public void setFoodFoodlistCollection(Collection<FoodFoodlist> foodFoodlistCollection) {
-        this.foodFoodlistCollection = foodFoodlistCollection;
+    public void setFoodCollection(Collection<Food> foodCollection) {
+        this.foodCollection = foodCollection;
     }
 
     @Override
@@ -105,10 +109,10 @@ public class Foodlist implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Foodlist)) {
+        if (!(object instanceof FoodList)) {
             return false;
         }
-        Foodlist other = (Foodlist) object;
+        FoodList other = (FoodList) object;
         if ((this.foodlistId == null && other.foodlistId != null) || (this.foodlistId != null && !this.foodlistId.equals(other.foodlistId))) {
             return false;
         }
@@ -117,7 +121,7 @@ public class Foodlist implements Serializable {
 
     @Override
     public String toString() {
-        return "com.restaurant.bot.domain.Foodlist[ foodlistId=" + foodlistId + " ]";
+        return "com.restaurant.bot.domain.FoodList[ foodlistId=" + foodlistId + " ]";
     }
     
 }

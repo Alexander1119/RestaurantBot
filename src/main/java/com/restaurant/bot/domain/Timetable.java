@@ -13,7 +13,11 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -43,13 +47,13 @@ public class Timetable implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "timetable_id")
     private Integer timetableId;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 30)
+    @Size(min = 1, max = 100)
     @Column(name = "day")
     private String day;
     @Basic(optional = false)
@@ -67,7 +71,10 @@ public class Timetable implements Serializable {
     @Column(name = "status")
     private int status;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "timetableId", fetch = FetchType.LAZY)
-    private Collection<RestaurantTimetable> restaurantTimetableCollection;
+    private Collection<FoodList> foodListCollection;
+    @JoinColumn(name = "restaurant_id", referencedColumnName = "restaurant_id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Restaurant restaurantId;
 
     public Timetable() {
     }
@@ -125,12 +132,20 @@ public class Timetable implements Serializable {
     }
 
     @XmlTransient
-    public Collection<RestaurantTimetable> getRestaurantTimetableCollection() {
-        return restaurantTimetableCollection;
+    public Collection<FoodList> getFoodListCollection() {
+        return foodListCollection;
     }
 
-    public void setRestaurantTimetableCollection(Collection<RestaurantTimetable> restaurantTimetableCollection) {
-        this.restaurantTimetableCollection = restaurantTimetableCollection;
+    public void setFoodListCollection(Collection<FoodList> foodListCollection) {
+        this.foodListCollection = foodListCollection;
+    }
+
+    public Restaurant getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(Restaurant restaurantId) {
+        this.restaurantId = restaurantId;
     }
 
     @Override

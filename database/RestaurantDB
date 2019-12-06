@@ -1,0 +1,157 @@
+-- Created by Vertabelo (http://vertabelo.com)
+-- Last modification date: 2019-12-05 23:34:32.977
+
+-- tables
+-- Table: chat
+CREATE TABLE chat (
+    chat_id serial  NOT NULL,
+    conversation_id int  NOT NULL,
+    message_id int  NOT NULL,
+    in_message varchar(500)  NOT NULL,
+    out_message varchar(500)  NOT NULL,
+    message_date date  NOT NULL,
+    tx_user varchar(100)  NOT NULL,
+    tx_host varchar(100)  NOT NULL,
+    tx_date date  NOT NULL,
+    user_id int  NOT NULL,
+    CONSTRAINT chat_pk PRIMARY KEY (chat_id)
+);
+
+-- Table: cpuser
+CREATE TABLE cpuser (
+    user_id serial  NOT NULL,
+    person_id int  NOT NULL,
+    bot_user_id int  NOT NULL,
+    tx_user varchar(100)  NOT NULL,
+    tx_host varchar(100)  NOT NULL,
+    tx_date date  NOT NULL,
+    CONSTRAINT cpuser_pk PRIMARY KEY (user_id)
+);
+
+-- Table: food
+CREATE TABLE food (
+    food_id serial  NOT NULL,
+    food_name varchar(100)  NOT NULL,
+    cost decimal(15,5)  NOT NULL,
+    status int  NOT NULL,
+    foodlist_id int  NOT NULL,
+    CONSTRAINT food_pk PRIMARY KEY (food_id)
+);
+
+-- Table: food_list
+CREATE TABLE food_list (
+    foodlist_id serial  NOT NULL,
+    status int  NOT NULL,
+    timetable_id int  NOT NULL,
+    CONSTRAINT food_list_pk PRIMARY KEY (foodlist_id)
+);
+
+-- Table: person
+CREATE TABLE person (
+    person_id serial  NOT NULL,
+    first_name varchar(100)  NOT NULL,
+    last_name varchar(100)  NOT NULL,
+    cellphone_number integer  NOT NULL,
+    status int  NOT NULL,
+    tx_user varchar(100)  NOT NULL,
+    tx_host varchar(100)  NOT NULL,
+    tx_date date  NOT NULL,
+    CONSTRAINT person_pk PRIMARY KEY (person_id)
+);
+
+-- Table: restaurant
+CREATE TABLE restaurant (
+    restaurant_id serial  NOT NULL,
+    person_id int  NOT NULL,
+    restaurant_name varchar(100)  NOT NULL,
+    zone varchar(100)  NOT NULL,
+    city varchar(100)  NOT NULL,
+    street varchar(100)  NOT NULL,
+    images varchar(100)  NOT NULL,
+    longitude decimal(15,6)  NOT NULL,
+    latitude decimal(15,6)  NOT NULL,
+    status int  NOT NULL,
+    tx_user varchar(100)  NOT NULL,
+    tx_host varchar(100)  NOT NULL,
+    tx_date date  NOT NULL,
+    CONSTRAINT restaurant_pk PRIMARY KEY (restaurant_id)
+);
+
+-- Table: timetable
+CREATE TABLE public.timetable (
+    timetable_id serial  NOT NULL,
+    day varchar(100)  NOT NULL,
+    opening_time time  NOT NULL,
+    closing_time time  NOT NULL,
+    status int  NOT NULL,
+    restaurant_id int  NOT NULL,
+    CONSTRAINT timetable_pk PRIMARY KEY (timetable_id)
+);
+
+-- Table: type_food
+CREATE TABLE type_food (
+    typefood_id serial  NOT NULL,
+    typefood_name varchar(100)  NOT NULL,
+    restaurant_id int  NOT NULL,
+    CONSTRAINT type_food_pk PRIMARY KEY (typefood_id)
+);
+
+-- foreign keys
+-- Reference: chat_cpuser (table: chat)
+ALTER TABLE chat ADD CONSTRAINT chat_cpuser
+    FOREIGN KEY (user_id)
+    REFERENCES cpuser (user_id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: cpuser_person (table: cpuser)
+ALTER TABLE cpuser ADD CONSTRAINT cpuser_person
+    FOREIGN KEY (person_id)
+    REFERENCES person (person_id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: food_food_list (table: food)
+ALTER TABLE food ADD CONSTRAINT food_food_list
+    FOREIGN KEY (foodlist_id)
+    REFERENCES food_list (foodlist_id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: food_list_timetable (table: food_list)
+ALTER TABLE food_list ADD CONSTRAINT food_list_timetable
+    FOREIGN KEY (timetable_id)
+    REFERENCES public.timetable (timetable_id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: restaurant_person (table: restaurant)
+ALTER TABLE restaurant ADD CONSTRAINT restaurant_person
+    FOREIGN KEY (person_id)
+    REFERENCES person (person_id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: timetable_restaurant (table: timetable)
+ALTER TABLE public.timetable ADD CONSTRAINT timetable_restaurant
+    FOREIGN KEY (restaurant_id)
+    REFERENCES restaurant (restaurant_id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: type_food_restaurant (table: type_food)
+ALTER TABLE type_food ADD CONSTRAINT type_food_restaurant
+    FOREIGN KEY (restaurant_id)
+    REFERENCES restaurant (restaurant_id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- End of file.
+

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +35,7 @@ public class BotBl {
                             "Sus datos son los siguientes: \n Desea cambiar o guardar "};
 
     @Autowired
+
     public BotBl(CpUSerRepository cpUSerRepository, CpPersonRepository cpPersonRepository, CpRestaurantRepository cpRestaurantRepository, CpChatRepository cpChatRepository) {
         this.cpUSerRepository = cpUSerRepository;
         this.cpPersonRepository = cpPersonRepository;
@@ -141,7 +141,7 @@ public class BotBl {
                  Person person=new Person();
                  person.setFirstName(user.getFirstName());
                  person.setLastName(user.getLastName());
-                 person.setCellPhoneNum(123456789);
+                 person.setCellphoneNumber(123456789);
                  person.setTxHost("loca lhost");
                  person.setTxUser("admin");
                  person.setTxDate(new Date());
@@ -156,7 +156,6 @@ public class BotBl {
                  cpUSerRepository.save(cpuser);
              }else{
                  System.out.println("EL USUAIO  FUE ENCONTRADO" + cpuser.toString());
-
              }
         return cpuser;
     }
