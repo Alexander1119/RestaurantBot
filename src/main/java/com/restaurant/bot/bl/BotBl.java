@@ -31,11 +31,7 @@ public class BotBl {
     private CpRestaurantRepository cpRestaurantRepository;
     private CpChatRepository cpChatRepository;
 
-    private String[] list={"-","Bienvenido a RestaurantBot\n" +
-                            "Sus datos son los siguientes: \n Desea cambiar o guardar "};
-
     @Autowired
-
     public BotBl(CpUSerRepository cpUSerRepository, CpPersonRepository cpPersonRepository, CpRestaurantRepository cpRestaurantRepository, CpChatRepository cpChatRepository) {
         this.cpUSerRepository = cpUSerRepository;
         this.cpPersonRepository = cpPersonRepository;
@@ -87,6 +83,7 @@ public class BotBl {
 
     private ResponsesReturn listResponses(int conversation,int message, String messagereceived, Update update){
         ResponsesReturn responsesReturn=new ResponsesReturn();
+        RestaurantBl restaurantBl;
         switch (conversation){
             case 0:
                         responsesReturn.setResponses("Bienvenido a RestaurantBot" +
@@ -96,7 +93,7 @@ public class BotBl {
 
                 break;
             case 1:
-                    RestaurantBl restaurantBl=new RestaurantBl();
+                    restaurantBl=new RestaurantBl();
                     responsesReturn=restaurantBl.restaurantRegister(conversation,message,messagereceived,update);
                     LOGGER.info(responsesReturn.getResponses()+" "+responsesReturn.getConversation()+"  "+responsesReturn.getMessage());
         }

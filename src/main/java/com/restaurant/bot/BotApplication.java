@@ -12,7 +12,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 @SpringBootApplication
 public class BotApplication {
 
-
     public static void main(String[] args) {
         ApiContextInitializer.init();
 
