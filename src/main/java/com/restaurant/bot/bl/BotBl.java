@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -148,38 +149,46 @@ public class BotBl {
 
                     case 7:
 
-                        dataRestaurant.add(messagereceived);
-                        LOGGER.info("La cantidad de datos son: " +dataRestaurant.size());
-                        Restaurant restaurant=null;
-                        restaurant=returnRestaurant(dataRestaurant,cpuser);
-                        cpRestaurantRepository.save(restaurant);
-                        responsesReturn.setResponses("Sus datos son los siguientes: ");
+                        responsesReturn.setResponses("GRACIAS!!!!! \n Los datos se guardaron correctamente");
                         responsesReturn.setMessage(8);
                         responsesReturn.setConversation(1);
+                        // LOGGER.info("La cantidad de datos son: " +dataRestaurant.size());
+                        Restaurant restaurant=null;
+                        restaurant=returnRestaurant(cpuser,messagereceived);
+                        cpRestaurantRepository.save(restaurant);
                         break;
                     case 8:
-                        responsesReturn.setResponses("Gracias!!!!!");
+                        responsesReturn.setResponses("Los datos se guardaron correctamente");
                         responsesReturn.setMessage(8);
                         responsesReturn.setConversation(1);
                 }
-
                 break;
         }
         return responsesReturn;
     }
-    public Restaurant returnRestaurant(ArrayList<String> data,Cpuser cpuser){
+    public Restaurant returnRestaurant(Cpuser cpuser,String lastmessage){
         Restaurant restaurant=new Restaurant();
+        ArrayList<Chat> listRegisterRestaurant=new ArrayList<>();
 
-        for (int i=0;i<data.size();i++){
-            LOGGER.info("numero: "+i+" dato: "+data.get(i));
+        for (int i=0;i<9;i++){
+            Chat chat=cpChatRepository.findMessageAndConversationByUserId(cpuser.getUserId(),1,i+3);
+            listRegisterRestaurant.add(chat);
         }
-        restaurant.setRestaurantName(data.get(0));
-        restaurant.setCity(data.get(1));
-        restaurant.setZone(data.get(2));
-        restaurant.setStreet(data.get(3));
+
+        LOGGER.info(listRegisterRestaurant.get(0).getInMessage());
+        LOGGER.info(listRegisterRestaurant.get(1).getInMessage());
+        LOGGER.info(listRegisterRestaurant.get(2).getInMessage());
+        LOGGER.info(listRegisterRestaurant.get(3).getInMessage());
+        LOGGER.info(listRegisterRestaurant.get(4).getInMessage());
+        //LOGGER.info(listRegisterRestaurant.get(5).getInMessage());
+
+        restaurant.setRestaurantName(listRegisterRestaurant.get(0).getInMessage());
+        restaurant.setCity(listRegisterRestaurant.get(1).getInMessage());
+        restaurant.setZone(listRegisterRestaurant.get(2).getInMessage());
+        restaurant.setStreet(listRegisterRestaurant.get(3).getInMessage());
         restaurant.setLatitude(new BigDecimal(123.123));
         restaurant.setLongitude(new BigDecimal(123.123));
-        restaurant.setImages(data.get(4));
+        restaurant.setImages(lastmessage);
         restaurant.setStatus(1);
         restaurant.setTxUser("Admin");
         restaurant.setTxHost("localhost");
