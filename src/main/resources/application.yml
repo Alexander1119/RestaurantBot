@@ -5,7 +5,8 @@ spring:
     platform: postgres
     url: jdbc:postgresql://127.0.0.1:5432/RestaurantDB
     username: postgres
-    password: carpooling
+    #password: carpooling
+    password: rami123
 
   jpa:
     hibernate:

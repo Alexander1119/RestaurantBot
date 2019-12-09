@@ -58,13 +58,13 @@ public class MainBot extends TelegramLongPollingBot {
         return ifNewUser;
     }
     @Override
-    public String getBotUsername() {
-        return "BotRestaurant_Bot";
-    }
+//    public String getBotUsername() { return "BotRestaurant_Bot"; }
+    public String getBotUsername(){return "NefertitiBot";}
 
     @Override
+//    public String getBotToken() { return "941260126:AAHg7GOLiBUxbFP14QsgcWENfu0Qt_dP7mc"; }
     public String getBotToken() {
-        return "941260126:AAHg7GOLiBUxbFP14QsgcWENfu0Qt_dP7mc";
+        return "852637482:AAHRFn6er6MknsLoMnysO6rlTILVzON6ipE";
     }
 }
 
