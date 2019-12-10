@@ -46,16 +46,15 @@ public class BotBl {
 
     }
 
-    public List<String> processUpdate(Update update){
+    public List<ResponsesReturn> processUpdate(Update update){
 
         LOGGER.info("Recibiendo update {}",update);
-        List<String> chatResponse = new ArrayList<>();
+        List<ResponsesReturn> chatResponse = new ArrayList<>();
 
         //Si el usuario de telegram no esta registrado se registra como user
         // con los datos que tiene registrados en telegram
         //Y si el usuario ya esta registrado saca los datos de la base de datos
         Cpuser cpUser = initUser(update.getMessage().getFrom());
-
 
         //Es el metodo donde recepciona los mensajes del usuario
         //Tambien controla las respuestas y donde los mensajes se guardan en base de datos
@@ -66,7 +65,7 @@ public class BotBl {
 
     //Es el metodo donde recepciona los mensajes del usuario
     //Tambien controla las respuestas y donde los mensajes se guardan en base de datos
-    private void continueChatWhitUser(Update update, Cpuser user,List<String> chatResponses){
+    private void continueChatWhitUser(Update update, Cpuser user,List<ResponsesReturn> chatResponses){
         //Saca el ultimo mensaje del usuario que llega en el update
         Chat lastMessage=cpChatRepository.findLastChatByUserId(user.getUserId());
         ResponsesReturn responses = null;
@@ -101,7 +100,7 @@ public class BotBl {
         chat.setTxHost(update.getMessage().getChatId().toString());
         //Se guarda el chat en la base de datos
         cpChatRepository.save(chat);
-        chatResponses.add(responses.getResponses());
+        chatResponses.add(responses);
     }
 
 
@@ -112,11 +111,11 @@ public class BotBl {
         switch (conversation){
             case 0:
                 //Conversacion inicial para un usuario nuevo en el bot
-                        responsesReturn.setResponses("Bienvenido a RestaurantBot" +
+                responsesReturn.setResponses("Bienvenido a RestaurantBot" +
                         "\nSus datos son los siguientes\n"+
                         update.getMessage().getFrom().getFirstName()+"  "+update.getMessage().getFrom().getLastName());
-                        responsesReturn.setMessage(1);
-                        responsesReturn.setConversation(1);
+                responsesReturn.setMessage(1);
+                responsesReturn.setConversation(1);
                 break;
             case 1:
                 //Conversacion para el usuario que desea registrar un restaurante
