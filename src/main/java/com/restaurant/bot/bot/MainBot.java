@@ -10,9 +10,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 import java.util.List;
 
-public class MainBot extends TelegramLongPollingBot {
+public class    MainBot extends TelegramLongPollingBot {
 
     private static final Logger LOGGER= LoggerFactory.getLogger(MainBot.class);
 
@@ -26,20 +29,21 @@ public class MainBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        //LOGGER.info(String.valueOf(update));
+
+        LOGGER.info(String.valueOf(update));
         update.getMessage().getFrom().getId();
         if (update.hasMessage() && update.getMessage().hasText()) {
 
-            List<String> messages=botBl.processUpdate(update);
 
-            //LOGGER.info(String.valueOf(messages));
+
+            List<String> messages=botBl.processUpdate(update);
+            LOGGER.info(String.valueOf(messages));
             for (String messageText : messages) {
                 SendMessage message = new SendMessage()
                         .setChatId(update.getMessage().getChatId())
                         .setText(messageText);
                 try {
                     this.execute(message);
-
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }

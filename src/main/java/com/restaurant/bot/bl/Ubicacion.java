@@ -2,7 +2,7 @@ package com.restaurant.bot.bl;
 //funcion principal para calcular distancia entre puntos
 
 public class Ubicacion {
-    public static double distance(){
+   /* public static double distance(){
         final int R = 6371; //radio total de la tierra;
 
         Double latDistance = Math.toRadians(latp - latg);
@@ -18,5 +18,5 @@ public class Ubicacion {
         distance=Math.pow(distance, 2) + Math.pow(height, 2);
 
         return Math.sqrt(distance);
-    }
+    }*/
 }

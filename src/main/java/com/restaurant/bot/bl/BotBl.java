@@ -33,7 +33,6 @@ public class BotBl {
     private CpPersonRepository cpPersonRepository;
     private CpRestaurantRepository cpRestaurantRepository;
     private CpChatRepository cpChatRepository;
-    ArrayList<String> dataRestaurant=new ArrayList<>();
 
     @Autowired
     public BotBl(CpUSerRepository cpUSerRepository, CpPersonRepository cpPersonRepository, CpRestaurantRepository cpRestaurantRepository, CpChatRepository cpChatRepository) {
@@ -52,24 +51,44 @@ public class BotBl {
         LOGGER.info("Recibiendo update {}",update);
         List<String> chatResponse = new ArrayList<>();
 
-       // System.out.println(update.getMessage().getFrom().getFirstName()+"  "+update.getMessage().getFrom().getLastName()+"    "+update.getMessage().getFrom().getId()+"       "+update.getMessage().getFrom().hashCode());
+        //Si el usuario de telegram no esta registrado se registra como user
+        // con los datos que tiene registrados en telegram
+        //Y si el usuario ya esta registrado saca los datos de la base de datos
         Cpuser cpUser = initUser(update.getMessage().getFrom());
 
-        continueChatWhitUser(update, cpUser, chatResponse);
 
+        //Es el metodo donde recepciona los mensajes del usuario
+        //Tambien controla las respuestas y donde los mensajes se guardan en base de datos
+        continueChatWhitUser(update, cpUser, chatResponse);
 
         return chatResponse;
     }
 
+    //Es el metodo donde recepciona los mensajes del usuario
+    //Tambien controla las respuestas y donde los mensajes se guardan en base de datos
     private void continueChatWhitUser(Update update, Cpuser user,List<String> chatResponses){
+        //Saca el ultimo mensaje del usuario que llega en el update
         Chat lastMessage=cpChatRepository.findLastChatByUserId(user.getUserId());
         ResponsesReturn responses = null;
+
+
         if (lastMessage==null){
+            //Si no tiene mensajes guarda su primer mensaje en base de datos
+            //  if(update.getMessage().getLocation().getLatitude()==floa)
             responses=listResponses(0,0,update.getMessage().getText(),update);
         }else{
-                responses=listResponses(lastMessage.getConversationId(),lastMessage.getMessageId(),update.getMessage().getText(),update);
+
+            //Si el usuario ya tiene mensajes controla las respuestas que
+            // debe tener dependiendo del mensaje recibido
+
+            responses = listResponses(lastMessage.getConversationId(), lastMessage.getMessageId(), update.getMessage().getText(), update);
         }
         LOGGER.info("PROCESSING IN MESSAGE: {} from user {}" ,update.getMessage().getText(), user.getUserId());
+
+
+        //Se obtiene los datos del update que manda el usuario y los datos que tiene
+        //la variable responses para control de conversation, id_message y respuesta
+        //que realiza el bot
         Chat chat=new Chat();
         chat.setUserId(user);
         chat.setConversationId(responses.getConversation());
@@ -80,16 +99,19 @@ public class BotBl {
         chat.setTxDate(new Date());
         chat.setTxUser(user.getUserId().toString());
         chat.setTxHost(update.getMessage().getChatId().toString());
+        //Se guarda el chat en la base de datos
         cpChatRepository.save(chat);
-        //LOGGER.info("THE MESSAGE SAVE AS: {}", chat.toString());
         chatResponses.add(responses.getResponses());
     }
 
+
+    //El siguiente metodo es el que controla las conversation_id
     private ResponsesReturn listResponses(int conversation,int message, String messagereceived, Update update){
         ResponsesReturn responsesReturn=new ResponsesReturn();
         RestaurantBl restaurantBl;
         switch (conversation){
             case 0:
+                //Conversacion inicial para un usuario nuevo en el bot
                         responsesReturn.setResponses("Bienvenido a RestaurantBot" +
                         "\nSus datos son los siguientes\n"+
                         update.getMessage().getFrom().getFirstName()+"  "+update.getMessage().getFrom().getLastName());
@@ -97,76 +119,77 @@ public class BotBl {
                         responsesReturn.setConversation(1);
                 break;
             case 1:
+                //Conversacion para el usuario que desea registrar un restaurante
 
+                //Se obtiene el person de la tabla user con el Chat_id que llega del update, para guardar
+                //en la tabla restaurant
                 Cpuser cpuser=cpUSerRepository.findByBotUserId(update.getMessage().getChatId().toString());
-                //Restaurant restaurant=new Restaurant();
-                switch (message){
-                    case 1:
-                        responsesReturn.setResponses("Ingrese el nombre de su restaurante");
-                        responsesReturn.setMessage(2);
-                        responsesReturn.setConversation(1);
-                        LOGGER.info("El mensaje de incio de registro es : "+messagereceived);
 
-                        break;
-                    case 2:
-                        dataRestaurant.add(messagereceived);
-                        responsesReturn.setResponses("Ingrese la ciudad en la que se encuentra su restaruante");
-                        responsesReturn.setMessage(3);
-                        responsesReturn.setConversation(1);
-                        LOGGER.info("El nombre del restaurante es: "+messagereceived);
-                        break;
-                    case 3:
-                        dataRestaurant.add(messagereceived);
-                        responsesReturn.setResponses("Ingrese la zona en la que se encuentra su restaruante");
-                        responsesReturn.setMessage(4);
-                        responsesReturn.setConversation(1);
-                       // LOGGER.info(city);
-                        break;
-                    case 4:
-                        dataRestaurant.add(messagereceived);
-                        responsesReturn.setResponses("Ingrese la calle en la que se encuentra su restaruante");
-                        responsesReturn.setMessage(5);
-                        responsesReturn.setConversation(1);
-                       // LOGGER.info(zone);
-
-                        break;
-
-                    case 5:
-                        dataRestaurant.add(messagereceived);
-                        responsesReturn.setResponses("Ingrese la ubicacion del restaurnate");
-                        responsesReturn.setMessage(6);
-                        responsesReturn.setConversation(1);
-                        //LOGGER.info(street);
-
-                        break;
-
-                    case 6:
-
-                        responsesReturn.setResponses("Ingrese una imagen del restaurante");
-                        responsesReturn.setMessage(7);
-                        responsesReturn.setConversation(1);
-                        break;
-
-                    case 7:
-
-                        responsesReturn.setResponses("GRACIAS!!!!! \n Los datos se guardaron correctamente");
-                        responsesReturn.setMessage(8);
-                        responsesReturn.setConversation(1);
-                        // LOGGER.info("La cantidad de datos son: " +dataRestaurant.size());
-                        Restaurant restaurant=null;
-                        restaurant=returnRestaurant(cpuser,messagereceived);
-                        cpRestaurantRepository.save(restaurant);
-                        break;
-                    case 8:
-                        responsesReturn.setResponses("Los datos se guardaron correctamente");
-                        responsesReturn.setMessage(8);
-                        responsesReturn.setConversation(1);
-                }
+                responsesReturn=switchRegisterRestaurant(conversation,message,messagereceived,update,cpuser);
                 break;
         }
         return responsesReturn;
     }
-    public Restaurant returnRestaurant(Cpuser cpuser,String lastmessage){
+
+
+
+
+    //Control de respuestas y mensajes qeu devuelve el usuario qeu desea registrar un restaurante
+    private ResponsesReturn switchRegisterRestaurant(int conversation,int message, String messagereceived, Update update,Cpuser cpuser){
+        ResponsesReturn responsesReturn=new ResponsesReturn();
+        switch (message){
+            case 1:
+                responsesReturn.setResponses("Ingrese el nombre de su restaurante");
+                responsesReturn.setMessage(2);
+                responsesReturn.setConversation(1);
+
+                break;
+            case 2:
+                responsesReturn.setResponses("Ingrese la ciudad en la que se encuentra su restaruante");
+                responsesReturn.setMessage(3);
+                responsesReturn.setConversation(1);
+                break;
+            case 3:
+                responsesReturn.setResponses("Ingrese la zona en la que se encuentra su restaruante");
+                responsesReturn.setMessage(4);
+                responsesReturn.setConversation(1);
+                break;
+            case 4:
+                responsesReturn.setResponses("Ingrese la calle en la que se encuentra su restaruante");
+                responsesReturn.setMessage(5);
+                responsesReturn.setConversation(1);
+                break;
+
+            case 5:
+                responsesReturn.setResponses("Ingrese la ubicacion del restaurnate");
+                responsesReturn.setMessage(6);
+                responsesReturn.setConversation(1);
+                break;
+
+            case 6:
+
+                responsesReturn.setResponses("Ingrese una imagen del restaurante");
+                responsesReturn.setMessage(7);
+                responsesReturn.setConversation(1);
+                break;
+
+            case 7:
+
+                responsesReturn.setResponses("GRACIAS!!!!! \n Los datos se guardaron correctamente");
+                responsesReturn.setMessage(7);
+                responsesReturn.setConversation(1);
+                Restaurant restaurant=null;
+                restaurant=returnRestaurant(cpuser,messagereceived);
+                cpRestaurantRepository.save(restaurant);
+                break;
+        }
+        return  responsesReturn;
+    }
+
+
+    //En el siguiente metodo se sacan los mensajes de la base de datos para registrar un restaurante
+    //Se controla con el in_message y message_id de la tabla chat
+    private Restaurant returnRestaurant(Cpuser cpuser,String lastmessage){
         Restaurant restaurant=new Restaurant();
         ArrayList<Chat> listRegisterRestaurant=new ArrayList<>();
 
@@ -196,44 +219,37 @@ public class BotBl {
         restaurant.setPersonId(cpuser.getPersonId());
         return restaurant;
     }
-    public boolean SearchIfNewUser(Update update){
-        boolean ifNewUser=false;
-        CpUSerRepository cpUSerRepository = null;
-        Long ChatId=update.getMessage().getChatId();
-        if (cpUSerRepository.findByBotUserId(String.valueOf(ChatId))!=null)
-        {
-            ifNewUser=true;
-        }
-        return ifNewUser;
-    }
 
+
+    //Metodo donde busca si el usuario de telegram esta registrado o no
     private Cpuser initUser(User user) {
         System.out.printf("ID DEL BOT USER ES " + user.getId());
         Cpuser cpuser = null;
 
 
-             cpuser = cpUSerRepository.findByBotUserId(user.getId().toString());
+        cpuser = cpUSerRepository.findByBotUserId(user.getId().toString());
 
-             if (cpuser==null){
-                 Person person=new Person();
-                 person.setFirstName(user.getFirstName());
-                 person.setLastName(user.getLastName());
-                 person.setCellphoneNumber(123456789);
-                 person.setTxHost("localhost");
-                 person.setTxUser("admin");
-                 person.setTxDate(new Date());
-                 cpPersonRepository.save(person);
+        if (cpuser==null){
+            Person person=new Person();
+            person.setFirstName(user.getFirstName());
+            person.setLastName(user.getLastName());
+            person.setCellphoneNumber(123456789);
+            person.setTxHost("localhost");
+            person.setTxUser("admin");
+            person.setTxDate(new Date());
+            cpPersonRepository.save(person);
 
-                 cpuser =new Cpuser();
-                 cpuser.setBotUserId(user.getId().toString());
-                 cpuser.setPersonId(person);
-                 cpuser.setTxHost("localhost");
-                 cpuser.setTxUser("admin");
-                 cpuser.setTxDate(new Date());
-                 cpUSerRepository.save(cpuser);
-             }else{
-                 System.out.println("EL USUAIO  FUE ENCONTRADO" + cpuser.toString());
-             }
+            cpuser =new Cpuser();
+            cpuser.setBotUserId(user.getId().toString());
+            cpuser.setPersonId(person);
+            cpuser.setTxHost("localhost");
+            cpuser.setTxUser("admin");
+            cpuser.setTxDate(new Date());
+            cpUSerRepository.save(cpuser);
+        }else{
+            System.out.println("EL USUAIO  FUE ENCONTRADO" + cpuser.toString());
+        }
         return cpuser;
     }
+
 }
