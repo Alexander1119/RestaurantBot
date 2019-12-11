@@ -6,10 +6,7 @@ import com.restaurant.bot.dao.CpUSerRepository;
 import com.restaurant.bot.dao.CpPersonRepository;
 import com.restaurant.bot.dao.CpRestaurantRepository;
 
-import com.restaurant.bot.domain.Chat;
-import com.restaurant.bot.domain.Cpuser;
-import com.restaurant.bot.domain.Person;
-import com.restaurant.bot.domain.Restaurant;
+import com.restaurant.bot.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,13 +115,33 @@ public class BotBl {
                 responsesReturn.setConversation(1);
                 break;
             case 1:
-                //Conversacion para el usuario que desea registrar un restaurante
+                switch (update.getMessage().getText()){
+                    case "Registrar restaurante":
+                            //Conversacion para el usuario que desea registrar un restaurante
 
-                //Se obtiene el person de la tabla user con el Chat_id que llega del update, para guardar
-                //en la tabla restaurant
-                Cpuser cpuser=cpUSerRepository.findByBotUserId(update.getMessage().getChatId().toString());
+                        //Se obtiene el person de la tabla user con el Chat_id que llega del update, para guardar
+                        //en la tabla restaurant
+                        Cpuser cpuser = cpUSerRepository.findByBotUserId(update.getMessage().getChatId().toString());
+                        responsesReturn = switchRegisterRestaurant(conversation, message, messagereceived, update, cpuser);
+                    break;
+                    case "Buscar restaurantes":
 
-                responsesReturn=switchRegisterRestaurant(conversation,message,messagereceived,update,cpuser);
+
+
+                    break;
+                    case "Configuracion":
+
+
+                    break;
+                }
+
+
+            break;
+            case 2:
+
+
+                responsesReturn=switchTimeTable(conversation,message,messagereceived,update);
+
                 break;
         }
         return responsesReturn;
@@ -175,8 +192,8 @@ public class BotBl {
             case 7:
 
                 responsesReturn.setResponses("GRACIAS!!!!! \n Los datos se guardaron correctamente");
-                responsesReturn.setMessage(7);
-                responsesReturn.setConversation(1);
+                responsesReturn.setMessage(2);
+                responsesReturn.setConversation(0);
                 Restaurant restaurant=null;
                 restaurant=returnRestaurant(cpuser,messagereceived);
                 cpRestaurantRepository.save(restaurant);
@@ -185,6 +202,65 @@ public class BotBl {
         return  responsesReturn;
     }
 
+
+    private ResponsesReturn switchTimeTable(int conversation,int message, String messagereceived, Update update){
+        ResponsesReturn responsesReturn=new ResponsesReturn();
+
+        switch (message){
+            case 0:
+                responsesReturn.setResponses("Ingrese el dia");
+                responsesReturn.setMessage(1);
+                responsesReturn.setConversation(2);
+            case 1:
+                responsesReturn.setResponses("Ingrese la hora de apertura hh:mm");
+                responsesReturn.setMessage(2);
+                responsesReturn.setConversation(2);
+                break;
+            case 2:
+                responsesReturn.setResponses("Ingrese la hora de cierre hh:mm");
+                responsesReturn.setMessage(3);
+                responsesReturn.setConversation(2);
+                break;
+            case 3:
+                responsesReturn.setResponses("Ingrese la calle en la que se encuentra su restaruante");
+                responsesReturn.setMessage(4);
+                responsesReturn.setConversation(2);
+               /* Restaurant restaurant=null;
+                restaurant=returnRestaurant(cpuser,messagereceived);
+                cpRestaurantRepository.save(restaurant);*/
+                break;
+        }
+        return  responsesReturn;
+    }
+    private Timetable returnTimeTable(Cpuser cpuser, String lastmessage){
+        Timetable timetable=new Timetable();
+        ArrayList<Timetable> listRegisterRestaurant=new ArrayList<>();
+/*
+        for (int i=0;i<9;i++){
+            Chat chat=cpChatRepository.findMessageAndConversationByUserId(cpuser.getUserId(),1,i+3);
+            listRegisterRestaurant.add(chat);
+        }
+
+        LOGGER.info(listRegisterRestaurant.get(0).getInMessage());
+        LOGGER.info(listRegisterRestaurant.get(1).getInMessage());
+        LOGGER.info(listRegisterRestaurant.get(2).getInMessage());
+        LOGGER.info(listRegisterRestaurant.get(3).getInMessage());
+        LOGGER.info(listRegisterRestaurant.get(4).getInMessage());
+
+        restaurant.setRestaurantName(listRegisterRestaurant.get(0).getInMessage());
+        restaurant.setCity(listRegisterRestaurant.get(1).getInMessage());
+        restaurant.setZone(listRegisterRestaurant.get(2).getInMessage());
+        restaurant.setStreet(listRegisterRestaurant.get(3).getInMessage());
+        restaurant.setLatitude(new BigDecimal(123.123));
+        restaurant.setLongitude(new BigDecimal(123.123));
+        restaurant.setImages(lastmessage);
+        restaurant.setStatus(1);
+        restaurant.setTxUser("Admin");
+        restaurant.setTxHost("localhost");
+        restaurant.setTxDate(new Date());
+        restaurant.setPersonId(cpuser.getPersonId());*/
+        return timetable;
+    }
 
     //En el siguiente metodo se sacan los mensajes de la base de datos para registrar un restaurante
     //Se controla con el in_message y message_id de la tabla chat
@@ -202,7 +278,6 @@ public class BotBl {
         LOGGER.info(listRegisterRestaurant.get(2).getInMessage());
         LOGGER.info(listRegisterRestaurant.get(3).getInMessage());
         LOGGER.info(listRegisterRestaurant.get(4).getInMessage());
-        //LOGGER.info(listRegisterRestaurant.get(5).getInMessage());
 
         restaurant.setRestaurantName(listRegisterRestaurant.get(0).getInMessage());
         restaurant.setCity(listRegisterRestaurant.get(1).getInMessage());
@@ -224,7 +299,6 @@ public class BotBl {
     private Cpuser initUser(User user) {
         System.out.printf("ID DEL BOT USER ES " + user.getId());
         Cpuser cpuser = null;
-
 
         cpuser = cpUSerRepository.findByBotUserId(user.getId().toString());
 

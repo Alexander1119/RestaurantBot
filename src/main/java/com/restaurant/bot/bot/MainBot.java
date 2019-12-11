@@ -3,21 +3,17 @@ package com.restaurant.bot.bot;
 import com.restaurant.bot.ResponsesReturn;
 import com.restaurant.bot.bl.BotBl;
 
-import com.restaurant.bot.dao.CpUSerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,11 +58,32 @@ public class    MainBot extends TelegramLongPollingBot {
     private void responsesToChatUSer(Update update, ResponsesReturn responses,List<ResponsesReturn> listMessage){
 
         ReplyKeyboardMarkup replyKeyboardMarkup=null;
-
-        //Condicion para mostrar los botones cuando la conversacion_id=1 y message_id=1
-        if (responses.getConversation()==1 && responses.getMessage()==1){
-            replyKeyboardMarkup=menuInitialUser();
+        /*
+        switch (responses.getConversation()){
+            case 1:
+                switch (responses.getMessage()){
+                    case 1:
+                        replyKeyboardMarkup=menuInitialUser();
+                }
+                break;
+            case 2:
+                switch (responses.getMessage()){
+                    case 0:
+                        replyKeyboardMarkup=menuInitialUser();
+                }
+                break;
+        }*/
+        if(responses.getConversation()==2 && responses.getMessage()==0){
+            replyKeyboardMarkup=menuDays();
         }
+            //Condicion para mostrar los botones cuando la conversacion_id=1 y message_id=1
+        if (responses.getConversation()==1 && responses.getMessage()==1){
+            replyKeyboardMarkup=menuInitialNewUser();
+        }if (responses.getConversation()==0 && responses.getMessage()==0){
+            replyKeyboardMarkup=menuInitialUserRestaurant();
+        }
+
+
 
         //manda el mensaje de respuesta al usuario
         for (ResponsesReturn messageText : listMessage) {
@@ -92,7 +109,7 @@ public class    MainBot extends TelegramLongPollingBot {
 
 
     //Metodo donde definimos el menu de botones para un usuario-cliente
-    private ReplyKeyboardMarkup menuInitialUser(){
+    private ReplyKeyboardMarkup menuInitialNewUser(){
         ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
         ArrayList<KeyboardRow> listKeyboard=new ArrayList<KeyboardRow>();
 
@@ -102,6 +119,94 @@ public class    MainBot extends TelegramLongPollingBot {
 
         keyboardButtons=new KeyboardRow();
         keyboardButtons.add("Registrar restaurante");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Configuracion");
+        listKeyboard.add(keyboardButtons);
+
+        keyboard.setKeyboard(listKeyboard);
+
+        return keyboard;
+    }
+
+    //Lista de botones para un usuario que tiene registrado un restaurante
+    private ReplyKeyboardMarkup menuInitialUserRestaurant(){
+        ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+        ArrayList<KeyboardRow> listKeyboard=new ArrayList<KeyboardRow>();
+
+        KeyboardRow keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Buscar restaurantes");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Ingresar Restaurante");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Configuracion");
+        listKeyboard.add(keyboardButtons);
+
+        keyboard.setKeyboard(listKeyboard);
+
+        return keyboard;
+    }
+
+    //Lista de botones para cuando ingresa un usuario en
+    //modo restaurante
+       private ReplyKeyboardMarkup menuInitialRestaurant(){
+        ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+        ArrayList<KeyboardRow> listKeyboard=new ArrayList<KeyboardRow>();
+
+        KeyboardRow keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Ver horario");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Ver menus");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Ver comidas");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Configuracion");
+        listKeyboard.add(keyboardButtons);
+        keyboard.setKeyboard(listKeyboard);
+
+        return keyboard;
+    }
+
+
+
+    //Metodo con los botones de todos  los dias de la semana
+    private ReplyKeyboardMarkup menuDays(){
+        ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+        ArrayList<KeyboardRow> listKeyboard=new ArrayList<KeyboardRow>();
+
+        KeyboardRow keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Lunes");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Martes");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Miercoles");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Jueves");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Viernes");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Sabado");
         listKeyboard.add(keyboardButtons);
 
         keyboard.setKeyboard(listKeyboard);
