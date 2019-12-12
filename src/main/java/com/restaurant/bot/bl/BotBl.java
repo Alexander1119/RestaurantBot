@@ -64,7 +64,9 @@ public class BotBl {
     //Tambien controla las respuestas y donde los mensajes se guardan en base de datos
     private void continueChatWhitUser(Update update, Cpuser user,List<ResponsesReturn> chatResponses){
         //Saca el ultimo mensaje del usuario que llega en el update
+
         Chat lastMessage=cpChatRepository.findLastChatByUserId(user.getUserId());
+
         ResponsesReturn responses = null;
 
 
@@ -73,14 +75,11 @@ public class BotBl {
             //  if(update.getMessage().getLocation().getLatitude()==floa)
             responses=listResponses(0,0,update.getMessage().getText(),update);
         }else{
-
             //Si el usuario ya tiene mensajes controla las respuestas que
             // debe tener dependiendo del mensaje recibido
-
             responses = listResponses(lastMessage.getConversationId(), lastMessage.getMessageId(), update.getMessage().getText(), update);
         }
         LOGGER.info("PROCESSING IN MESSAGE: {} from user {}" ,update.getMessage().getText(), user.getUserId());
-
 
         //Se obtiene los datos del update que manda el usuario y los datos que tiene
         //la variable responses para control de conversation, id_message y respuesta
@@ -115,26 +114,13 @@ public class BotBl {
                 responsesReturn.setConversation(1);
                 break;
             case 1:
-                switch (update.getMessage().getText()){
-                    case "Registrar restaurante":
-                            //Conversacion para el usuario que desea registrar un restaurante
+
+                        //Conversacion para el usuario que desea registrar un restaurante
 
                         //Se obtiene el person de la tabla user con el Chat_id que llega del update, para guardar
                         //en la tabla restaurant
                         Cpuser cpuser = cpUSerRepository.findByBotUserId(update.getMessage().getChatId().toString());
                         responsesReturn = switchRegisterRestaurant(conversation, message, messagereceived, update, cpuser);
-                    break;
-                    case "Buscar restaurantes":
-
-
-
-                    break;
-                    case "Configuracion":
-
-
-                    break;
-                }
-
 
             break;
             case 2:
@@ -149,8 +135,16 @@ public class BotBl {
 
 
 
+    public ResponsesReturn caseResponses(int conversation,String[] responsesList){
 
-    //Control de respuestas y mensajes qeu devuelve el usuario qeu desea registrar un restaurante
+        ResponsesReturn responsesReturn=new ResponsesReturn();
+        for (int i=0; i<responsesList.length;i++){
+
+
+        }
+        return responsesReturn;
+    }
+    //Control de respuestas y mensajes que devuelve el usuario qeu desea registrar un restaurante
     private ResponsesReturn switchRegisterRestaurant(int conversation,int message, String messagereceived, Update update,Cpuser cpuser){
         ResponsesReturn responsesReturn=new ResponsesReturn();
         switch (message){
@@ -232,6 +226,8 @@ public class BotBl {
         }
         return  responsesReturn;
     }
+
+
     private Timetable returnTimeTable(Cpuser cpuser, String lastmessage){
         Timetable timetable=new Timetable();
         ArrayList<Timetable> listRegisterRestaurant=new ArrayList<>();
