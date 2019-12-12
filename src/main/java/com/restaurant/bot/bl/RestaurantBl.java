@@ -6,7 +6,7 @@ import com.restaurant.bot.dao.CpPersonRepository;
 import com.restaurant.bot.dao.CpRestaurantRepository;
 import com.restaurant.bot.dao.CpUSerRepository;
 import com.restaurant.bot.domain.Cpuser;
-import com.restaurant.bot.domain.Cpuser_;
+import com.restaurant.bot.domain.Cpuser;
 import com.restaurant.bot.domain.Person;
 import com.restaurant.bot.domain.Restaurant;
 import com.restaurant.bot.dto.RestaurantDto;

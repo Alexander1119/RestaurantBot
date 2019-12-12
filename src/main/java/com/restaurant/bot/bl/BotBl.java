@@ -129,6 +129,11 @@ public class BotBl {
                 responsesReturn=switchTimeTable(conversation,message,messagereceived,update);
 
                 break;
+            case 3:
+                responsesReturn.setResponses(update.getMessage().getText());
+                responsesReturn.setMessage(3);
+                responsesReturn.setConversation(3);
+                break;
         }
         return responsesReturn;
     }
@@ -177,7 +182,6 @@ public class BotBl {
                 break;
 
             case 6:
-
                 responsesReturn.setResponses("Ingrese una imagen del restaurante");
                 responsesReturn.setMessage(7);
                 responsesReturn.setConversation(1);
