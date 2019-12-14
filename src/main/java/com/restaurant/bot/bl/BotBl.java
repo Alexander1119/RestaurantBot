@@ -164,8 +164,10 @@ public class BotBl {
                 break;
             case 5:
                 responsesReturn=switchMenuBuscar(message,messagereceived,update);
+                break;
             case 6:
                 responsesReturn=switchMenuConfiguracion(message,messagereceived,update);
+                break;
         }
         return responsesReturn;
     }
@@ -176,7 +178,7 @@ public class BotBl {
         switch (message){
             case 1:
                 responsesReturn.setResponses("Ingresaste a configuracion");
-                responsesReturn.setConversation(6);
+                responsesReturn.setConversation(1);
                 responsesReturn.setMessage(1);
                 break;
         }
@@ -189,7 +191,7 @@ public class BotBl {
             case 1:
                 responsesReturn.setResponses("Ingresaaste Buscar restaurante");
                 responsesReturn.setMessage(1);
-                responsesReturn.setConversation(5);
+                responsesReturn.setConversation(1);
         }
 
         return responsesReturn;
