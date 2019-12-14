@@ -1,12 +1,11 @@
 package com.restaurant.bot.bl;
 
 import com.restaurant.bot.ResponsesReturn;
-import com.restaurant.bot.dao.CpChatRepository;
-import com.restaurant.bot.dao.CpUSerRepository;
-import com.restaurant.bot.dao.CpPersonRepository;
-import com.restaurant.bot.dao.CpRestaurantRepository;
+import com.restaurant.bot.dao.*;
 
 import com.restaurant.bot.domain.*;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,13 +30,15 @@ public class BotBl {
     private CpPersonRepository cpPersonRepository;
     private CpRestaurantRepository cpRestaurantRepository;
     private CpChatRepository cpChatRepository;
+    private CpTimeTableRepository cpTimeTableRepository;
 
     @Autowired
-    public BotBl(CpUSerRepository cpUSerRepository, CpPersonRepository cpPersonRepository, CpRestaurantRepository cpRestaurantRepository, CpChatRepository cpChatRepository) {
+    public BotBl(CpUSerRepository cpUSerRepository, CpPersonRepository cpPersonRepository, CpRestaurantRepository cpRestaurantRepository, CpChatRepository cpChatRepository,CpTimeTableRepository cpTimeTableRepository) {
         this.cpUSerRepository = cpUSerRepository;
         this.cpPersonRepository = cpPersonRepository;
         this.cpRestaurantRepository = cpRestaurantRepository;
         this.cpChatRepository = cpChatRepository;
+        this.cpTimeTableRepository=cpTimeTableRepository;
     }
 
     public BotBl() {
@@ -69,7 +71,6 @@ public class BotBl {
 
         ResponsesReturn responses = null;
 
-
         if (lastMessage==null){
             //Si no tiene mensajes guarda su primer mensaje en base de datos
             //  if(update.getMessage().getLocation().getLatitude()==floa)
@@ -77,7 +78,37 @@ public class BotBl {
         }else{
             //Si el usuario ya tiene mensajes controla las respuestas que
             // debe tener dependiendo del mensaje recibido
-            responses = listResponses(lastMessage.getConversationId(), lastMessage.getMessageId(), update.getMessage().getText(), update);
+
+                switch (update.getMessage().getText()){
+                    case "Buscar restaurantes":
+                        responses = listResponses(10, lastMessage.getMessageId(), update.getMessage().getText(), update);
+                        break;
+
+                    case "Registrar restaurante":
+                        responses = listResponses(20, lastMessage.getMessageId(), update.getMessage().getText(), update);
+
+                        break;
+                    case "Ingresar Restaurante":
+                        responses = listResponses(30, lastMessage.getMessageId(), update.getMessage().getText(), update);
+
+                        break;
+                    case "Opciones Cliente":
+                        responses = listResponses(40, lastMessage.getMessageId(), update.getMessage().getText(), update);
+                        break;
+                    default:
+                        responses = listResponses(lastMessage.getConversationId(), lastMessage.getMessageId(), update.getMessage().getText(), update);
+                        break;
+                }
+
+
+           /* if(update.getMessage().getText()=="Registrar restaurante"){
+                responses = listResponses(1, lastMessage.getMessageId(), update.getMessage().getText(), update);
+            }if (update.getMessage().getText()=="Buscar restaurantes"){
+                responses = listResponses(5, lastMessage.getMessageId(), update.getMessage().getText(), update);
+            }else{
+                responses = listResponses(lastMessage.getConversationId(), lastMessage.getMessageId(), update.getMessage().getText(), update);
+
+            }*/
         }
         LOGGER.info("PROCESSING IN MESSAGE: {} from user {}" ,update.getMessage().getText(), user.getUserId());
 
@@ -99,7 +130,6 @@ public class BotBl {
         chatResponses.add(responses);
     }
 
-
     //El siguiente metodo es el que controla las conversation_id
     private ResponsesReturn listResponses(int conversation,int message, String messagereceived, Update update){
         ResponsesReturn responsesReturn=new ResponsesReturn();
@@ -111,44 +141,91 @@ public class BotBl {
                         "\nSus datos son los siguientes\n"+
                         update.getMessage().getFrom().getFirstName()+"  "+update.getMessage().getFrom().getLastName());
                 responsesReturn.setMessage(1);
-                responsesReturn.setConversation(1);
+                responsesReturn.setConversation(20);
                 break;
-            case 1:
-
-                        //Conversacion para el usuario que desea registrar un restaurante
-
-                        //Se obtiene el person de la tabla user con el Chat_id que llega del update, para guardar
-                        //en la tabla restaurant
-                        Cpuser cpuser = cpUSerRepository.findByBotUserId(update.getMessage().getChatId().toString());
-                        responsesReturn = switchRegisterRestaurant(conversation, message, messagereceived, update, cpuser);
-
-            break;
-            case 2:
-
-
-                responsesReturn=switchTimeTable(conversation,message,messagereceived,update);
+            case 10:
+                responsesReturn=switchMenuBuscar(message,messagereceived,update);
 
                 break;
-            case 3:
-                responsesReturn.setResponses(update.getMessage().getText());
-                responsesReturn.setMessage(3);
-                responsesReturn.setConversation(3);
+            case 20:
+                //Conversacion para el usuario que desea registrar un restaurante
+
+                //Se obtiene el person de la tabla user con el Chat_id que llega del update, para guardar
+                //en la tabla restaurant
+                Cpuser cpuser = cpUSerRepository.findByBotUserId(update.getMessage().getChatId().toString());
+                responsesReturn = switchRegisterRestaurant(conversation, message, messagereceived, update, cpuser);
+
                 break;
+            case 30:
+                responsesReturn=switchMenuRestaurant(conversation,message,messagereceived,update);
+
+                break;
+            case 40:
+                responsesReturn=switchMenuConfiguracion(message,messagereceived,update);
+
+                break;
+            /*case 50:
+                Cpuser cpuser2 = cpUSerRepository.findByBotUserId(update.getMessage().getChatId().toString());
+                responsesReturn=switchTimeTable(conversation,message,messagereceived,update,cpuser2);
+                break;
+            case 60:
+                break;
+            case 70:
+                break;*/
         }
         return responsesReturn;
     }
 
-
-
-    public ResponsesReturn caseResponses(int conversation,String[] responsesList){
-
+    private ResponsesReturn switchMenuConfiguracion(int message, String messagereceived, Update update){
         ResponsesReturn responsesReturn=new ResponsesReturn();
-        for (int i=0; i<responsesList.length;i++){
 
-
+        switch (message){
+            case 1:
+                responsesReturn.setResponses("Ingresaste a configuracion");
+                responsesReturn.setConversation(1);
+                responsesReturn.setMessage(20);
+                break;
         }
         return responsesReturn;
     }
+    private ResponsesReturn switchMenuBuscar(int message, String messagereceived, Update update){
+        ResponsesReturn responsesReturn=new ResponsesReturn();
+
+        switch (message){
+            case 1:
+                responsesReturn.setResponses("Ingresaaste Buscar restaurante");
+                responsesReturn.setMessage(1);
+                responsesReturn.setConversation(20);
+        }
+        return responsesReturn;
+    }
+    private ResponsesReturn switchMenuRestaurant(int conversation,int message, String messagereceived, Update update){
+        ResponsesReturn responsesReturn=new ResponsesReturn();
+
+        switch (message){
+
+            case 1:
+                responsesReturn.setResponses("Ingresaste como restaurante");
+                responsesReturn.setConversation(3);
+                responsesReturn.setMessage(1);
+                break;
+                    }
+        return responsesReturn;
+    }
+
+    private ResponsesReturn switchMenuTimeTable(int conversation,int message, String messagereceived, Update update){
+        ResponsesReturn responsesReturn=new ResponsesReturn();
+
+        switch (message){
+            case 1:
+                responsesReturn.setResponses("Horario");
+                responsesReturn.setConversation(4);
+                responsesReturn.setMessage(1);
+                break;
+        }
+        return responsesReturn;
+    }
+
     //Control de respuestas y mensajes que devuelve el usuario qeu desea registrar un restaurante
     private ResponsesReturn switchRegisterRestaurant(int conversation,int message, String messagereceived, Update update,Cpuser cpuser){
         ResponsesReturn responsesReturn=new ResponsesReturn();
@@ -156,44 +233,44 @@ public class BotBl {
             case 1:
                 responsesReturn.setResponses("Ingrese el nombre de su restaurante");
                 responsesReturn.setMessage(2);
-                responsesReturn.setConversation(1);
+                responsesReturn.setConversation(conversation);
 
                 break;
             case 2:
                 responsesReturn.setResponses("Ingrese la ciudad en la que se encuentra su restaruante");
                 responsesReturn.setMessage(3);
-                responsesReturn.setConversation(1);
+                responsesReturn.setConversation(conversation);
                 break;
             case 3:
                 responsesReturn.setResponses("Ingrese la zona en la que se encuentra su restaruante");
                 responsesReturn.setMessage(4);
-                responsesReturn.setConversation(1);
+                responsesReturn.setConversation(conversation);
                 break;
             case 4:
                 responsesReturn.setResponses("Ingrese la calle en la que se encuentra su restaruante");
                 responsesReturn.setMessage(5);
-                responsesReturn.setConversation(1);
+                responsesReturn.setConversation(conversation);
                 break;
 
             case 5:
                 responsesReturn.setResponses("Ingrese la ubicacion del restaurnate");
                 responsesReturn.setMessage(6);
-                responsesReturn.setConversation(1);
+                responsesReturn.setConversation(conversation);
                 break;
 
             case 6:
                 responsesReturn.setResponses("Ingrese una imagen del restaurante");
                 responsesReturn.setMessage(7);
-                responsesReturn.setConversation(1);
+                responsesReturn.setConversation(conversation);
                 break;
 
             case 7:
 
                 responsesReturn.setResponses("GRACIAS!!!!! \n Los datos se guardaron correctamente");
-                responsesReturn.setMessage(2);
-                responsesReturn.setConversation(0);
+                responsesReturn.setMessage(1);
+                responsesReturn.setConversation(30);
                 Restaurant restaurant=null;
-                restaurant=returnRestaurant(cpuser,messagereceived);
+                restaurant=returnRestaurant(conversation,cpuser,messagereceived);
                 cpRestaurantRepository.save(restaurant);
                 break;
         }
@@ -201,75 +278,71 @@ public class BotBl {
     }
 
 
-    private ResponsesReturn switchTimeTable(int conversation,int message, String messagereceived, Update update){
+    private ResponsesReturn switchTimeTable(int conversation,int message, String messagereceived, Update update,Cpuser cpuser){
         ResponsesReturn responsesReturn=new ResponsesReturn();
-
+        Restaurant restaurant=new Restaurant();
         switch (message){
-            case 0:
-                responsesReturn.setResponses("Ingrese el dia");
-                responsesReturn.setMessage(1);
-                responsesReturn.setConversation(2);
             case 1:
-                responsesReturn.setResponses("Ingrese la hora de apertura hh:mm");
+                responsesReturn.setResponses("Ingrese el dia");
                 responsesReturn.setMessage(2);
-                responsesReturn.setConversation(2);
+                responsesReturn.setConversation(conversation);
                 break;
             case 2:
-                responsesReturn.setResponses("Ingrese la hora de cierre hh:mm");
+                responsesReturn.setResponses("Ingrese la hora de apertura hh:mm");
                 responsesReturn.setMessage(3);
-                responsesReturn.setConversation(2);
+                responsesReturn.setConversation(conversation);
                 break;
             case 3:
-                responsesReturn.setResponses("Ingrese la calle en la que se encuentra su restaruante");
+                responsesReturn.setResponses("Ingrese la hora de cierre hh:mm");
                 responsesReturn.setMessage(4);
-                responsesReturn.setConversation(2);
-               /* Restaurant restaurant=null;
-                restaurant=returnRestaurant(cpuser,messagereceived);
-                cpRestaurantRepository.save(restaurant);*/
+                responsesReturn.setConversation(conversation);
+                break;
+            case 4:
+                responsesReturn.setResponses("Ingrese la calle en la que se encuentra su restaruante");
+                responsesReturn.setMessage(5);
+                responsesReturn.setConversation(conversation);
+                Timetable timetable=null;
+                timetable=returnTimeTable(cpuser,messagereceived);
+                cpRestaurantRepository.save(restaurant);
                 break;
         }
         return  responsesReturn;
     }
 
-
     private Timetable returnTimeTable(Cpuser cpuser, String lastmessage){
         Timetable timetable=new Timetable();
-        ArrayList<Timetable> listRegisterRestaurant=new ArrayList<>();
-/*
-        for (int i=0;i<9;i++){
-            Chat chat=cpChatRepository.findMessageAndConversationByUserId(cpuser.getUserId(),1,i+3);
-            listRegisterRestaurant.add(chat);
+        ArrayList<Chat> listRegisterTimeTable=new ArrayList<>();
+
+        for (int i=0;i<4;i++){
+            Chat chat=cpChatRepository.findMessageAndConversationByUserId(cpuser.getUserId(),10,i+1);
+            listRegisterTimeTable.add(chat);
         }
 
-        LOGGER.info(listRegisterRestaurant.get(0).getInMessage());
-        LOGGER.info(listRegisterRestaurant.get(1).getInMessage());
-        LOGGER.info(listRegisterRestaurant.get(2).getInMessage());
-        LOGGER.info(listRegisterRestaurant.get(3).getInMessage());
-        LOGGER.info(listRegisterRestaurant.get(4).getInMessage());
+        LOGGER.info(listRegisterTimeTable.get(0).getInMessage());
+        LOGGER.info(listRegisterTimeTable.get(1).getInMessage());
+        LOGGER.info(listRegisterTimeTable.get(2).getInMessage());
+        LOGGER.info(listRegisterTimeTable.get(3).getInMessage());
 
-        restaurant.setRestaurantName(listRegisterRestaurant.get(0).getInMessage());
-        restaurant.setCity(listRegisterRestaurant.get(1).getInMessage());
-        restaurant.setZone(listRegisterRestaurant.get(2).getInMessage());
-        restaurant.setStreet(listRegisterRestaurant.get(3).getInMessage());
-        restaurant.setLatitude(new BigDecimal(123.123));
-        restaurant.setLongitude(new BigDecimal(123.123));
-        restaurant.setImages(lastmessage);
-        restaurant.setStatus(1);
-        restaurant.setTxUser("Admin");
-        restaurant.setTxHost("localhost");
-        restaurant.setTxDate(new Date());
-        restaurant.setPersonId(cpuser.getPersonId());*/
+        String open=listRegisterTimeTable.get(1).getInMessage();
+        String[] vopen=open.split(":");
+
+        String close=listRegisterTimeTable.get(1).getInMessage();
+        String[] vclose=close.split(":");
+        timetable.setDay(listRegisterTimeTable.get(0).getInMessage());
+        timetable.setOpeningTime(new Time(Integer.parseInt(vopen[0]), Integer.parseInt(vopen[1]),00));
+        timetable.setClosingTime(new Time(Integer.parseInt(vclose[0]), Integer.parseInt(vclose[1]),00));
+
         return timetable;
     }
 
     //En el siguiente metodo se sacan los mensajes de la base de datos para registrar un restaurante
     //Se controla con el in_message y message_id de la tabla chat
-    private Restaurant returnRestaurant(Cpuser cpuser,String lastmessage){
+    private Restaurant returnRestaurant(int conversation,Cpuser cpuser,String lastmessage){
         Restaurant restaurant=new Restaurant();
         ArrayList<Chat> listRegisterRestaurant=new ArrayList<>();
 
         for (int i=0;i<9;i++){
-            Chat chat=cpChatRepository.findMessageAndConversationByUserId(cpuser.getUserId(),1,i+3);
+            Chat chat=cpChatRepository.findMessageAndConversationByUserId(cpuser.getUserId(),conversation,i+3);
             listRegisterRestaurant.add(chat);
         }
 
@@ -324,5 +397,7 @@ public class BotBl {
         }
         return cpuser;
     }
+
+
 
 }
