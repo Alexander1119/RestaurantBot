@@ -3,8 +3,15 @@ package com.restaurant.bot.bot;
 import com.restaurant.bot.ResponsesReturn;
 import com.restaurant.bot.bl.BotBl;
 
+import com.restaurant.bot.dao.CpPersonRepository;
+import com.restaurant.bot.dao.CpRestaurantRepository;
+import com.restaurant.bot.dao.CpUSerRepository;
+import com.restaurant.bot.domain.Cpuser;
+import com.restaurant.bot.domain.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -21,11 +28,13 @@ import java.util.List;
 public class    MainBot extends TelegramLongPollingBot {
 
     private static final Logger LOGGER= LoggerFactory.getLogger(MainBot.class);
-
+    int numberRegistro=0;
     BotBl botBl;
+
     public MainBot(BotBl customerBl) {
         this.botBl = customerBl;
     }
+
     public MainBot() {
 
     }
@@ -59,25 +68,28 @@ public class    MainBot extends TelegramLongPollingBot {
     private void responsesToChatUSer(Update update, ResponsesReturn responses,List<ResponsesReturn> listMessage){
 
         ReplyKeyboardMarkup replyKeyboardMarkup=null;
-
-        if(responses.getConversation()==3 && responses.getMessage()==0){
+        /*if(responses.getConversation()==4 && responses.getMessage()==1){
+            replyKeyboardMarkup=menuDays();
+        }
+        if(responses.getConversation()==3 && responses.getMessage()==1){
             replyKeyboardMarkup=menuTimeTable();
-        }
+        }*/
+        if(responses.getConversation()==20 && responses.getMessage()==1 && numberRegistro==0){
 
-        if(responses.getConversation()==2 && responses.getMessage()==0){
-            replyKeyboardMarkup=menuInitialRestaurant();
+                replyKeyboardMarkup=menuInitialNewUser();
+                numberRegistro++;
         }
-            //Condicion para mostrar los botones cuando la conversacion_id=1 y message_id=1
-        if (responses.getConversation()==1 && responses.getMessage()==1){
-            replyKeyboardMarkup=menuInitialNewUser();
+         if(responses.getConversation()==30 && responses.getMessage()==1 && numberRegistro!=0){
+            replyKeyboardMarkup=menuInitialUserRestaurant();
         }
-
+        LOGGER.info("numero de Registro es = "+numberRegistro);
         //manda el mensaje de respuesta al usuario
         for (ResponsesReturn messageText : listMessage) {
 
             SendMessage message = new SendMessage()
                     .setChatId(update.getMessage().getChatId())
                     .setText(messageText.getResponses());
+
             if(replyKeyboardMarkup!=null){
                 message.setReplyMarkup(replyKeyboardMarkup);
             }else{
@@ -110,7 +122,7 @@ public class    MainBot extends TelegramLongPollingBot {
         listKeyboard.add(keyboardButtons);
 
         keyboardButtons=new KeyboardRow();
-        keyboardButtons.add("Configuracion");
+        keyboardButtons.add("Opciones Cliente");
         listKeyboard.add(keyboardButtons);
 
         keyboard.setKeyboard(listKeyboard);
@@ -131,11 +143,10 @@ public class    MainBot extends TelegramLongPollingBot {
         keyboardButtons.add("Ingresar Restaurante");
         listKeyboard.add(keyboardButtons);
 
-        /*
         keyboardButtons=new KeyboardRow();
-        keyboardButtons.add("Configuracion");
+        keyboardButtons.add("Opciones Cliente");
         listKeyboard.add(keyboardButtons);
-        */
+
         keyboard.setKeyboard(listKeyboard);
 
         return keyboard;
@@ -213,6 +224,26 @@ public class    MainBot extends TelegramLongPollingBot {
 
         return keyboard;
     }
+
+    private ReplyKeyboardMarkup menuInitialBusqueda(){
+        ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+        ArrayList<KeyboardRow> listKeyboard=new ArrayList<KeyboardRow>();
+
+        KeyboardRow keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Buscar por Ubicacion");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Buscar Comida");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Horario de Atencion");
+        listKeyboard.add(keyboardButtons);
+        return keyboard;
+    }
+
+
     public String getBotUsername() { return "BotRestaurant_Bot"; }
     //public String getBotUsername(){return "NefertitiBot";}
 
