@@ -16,7 +16,7 @@ public class Ubicacion {
 
         //double height = elg-elp;
 
-        distance=Math.pow(distance, 2); //+ Math.pow(height, 2);
+        //distance=Math.pow(distance, 2); //+ Math.pow(height, 2);
 
         return Math.sqrt(distance);
     }
