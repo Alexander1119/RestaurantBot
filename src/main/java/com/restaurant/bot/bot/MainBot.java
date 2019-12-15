@@ -42,9 +42,11 @@ public class    MainBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
+
         LOGGER.info(String.valueOf(update));
         update.getMessage().getFrom().getId();
         if (update.hasMessage() && update.getMessage().hasText()) {
+
 
             List<ResponsesReturn> messages=botBl.processUpdate(update);
             ResponsesReturn responses=messages.get(0);
@@ -87,6 +89,12 @@ public class    MainBot extends TelegramLongPollingBot {
         if((responses.getConversation()==10 || responses.getConversation()==20 || responses.getConversation()==30 || responses.getConversation()==40) && responses.getMessage()==1 ){
             replyKeyboardMarkup=menuInitialUser();
         }
+
+         if(responses.getConversation()==10 && responses.getMessage()==2){
+             replyKeyboardMarkup=menuInitialBusqueda();
+         }
+        LOGGER.info("numero de Registro es = "+numberRegistro);
+
         //manda el mensaje de respuesta al usuario
         for (ResponsesReturn messageText : listMessage) {
             SendMessage message = new SendMessage()
@@ -248,14 +256,18 @@ public class    MainBot extends TelegramLongPollingBot {
         keyboardButtons=new KeyboardRow();
         keyboardButtons.add("Horario de Atencion");
         listKeyboard.add(keyboardButtons);
+        keyboard.setKeyboard(listKeyboard);
+
         return keyboard;
     }
 
-    public String getBotUsername() { return "BotRestaurant_Bot"; }
-    //public String getBotUsername(){return "NefertitiBot";}
+
+    //public String getBotUsername() { return "BotRestaurant_Bot"; }
+    public String getBotUsername(){return "NefertitiBot";}
+
 
     @Override
-    public String getBotToken() { return "941260126:AAHg7GOLiBUxbFP14QsgcWENfu0Qt_dP7mc"; }
-    //public String getBotToken() {return "852637482:AAHRFn6er6MknsLoMnysO6rlTILVzON6ipE";}
+    //public String getBotToken() { return "941260126:AAHg7GOLiBUxbFP14QsgcWENfu0Qt_dP7mc"; }
+    public String getBotToken() {return "852637482:AAHRFn6er6MknsLoMnysO6rlTILVzON6ipE";}
 }
 
