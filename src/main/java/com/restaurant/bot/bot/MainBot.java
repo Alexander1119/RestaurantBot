@@ -77,12 +77,12 @@ public class    MainBot extends TelegramLongPollingBot {
             replyKeyboardMarkup=menuTimeTable();
         }*/
 
-        if(responses.getConversation()==20 &&  responses.getMessage()==7 ){
+      /*  if(responses.getConversation()==20 &&  responses.getMessage()==7 ){
             //replyKeyboardMarkup=menuInitialRestaurant();
             float latitud=update.getMessage().getLocation().getLatitude();
             float longitud=update.getMessage().getLocation().getLongitude();
             ubi=latitud+"@"+longitud;
-        }
+        }*/
         if(responses.getConversation()==30 && responses.getMessage()==2 ){
             replyKeyboardMarkup=menuInitialRestaurant();
         }
@@ -93,7 +93,11 @@ public class    MainBot extends TelegramLongPollingBot {
          if(responses.getConversation()==10 && responses.getMessage()==2){
              replyKeyboardMarkup=menuInitialBusqueda();
          }
-        LOGGER.info("numero de Registro es = "+numberRegistro);
+        if(responses.getConversation()==31 && (responses.getMessage()==2)){
+            replyKeyboardMarkup=menuDays();
+        }/*if(responses.getConversation()==32 && responses.getMessage()==1){
+            replyKeyboardMarkup=menuDays();
+        }*/
 
         //manda el mensaje de respuesta al usuario
         for (ResponsesReturn messageText : listMessage) {
@@ -176,7 +180,20 @@ public class    MainBot extends TelegramLongPollingBot {
         listKeyboard.add(keyboardButtons);
 
         keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Registrar horario");
+        listKeyboard.add(keyboardButtons);
+        keyboard.setKeyboard(listKeyboard);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Registrar menu");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
         keyboardButtons.add("Ver menus");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Registrar comida");
         listKeyboard.add(keyboardButtons);
 
         keyboardButtons=new KeyboardRow();
@@ -184,7 +201,7 @@ public class    MainBot extends TelegramLongPollingBot {
         listKeyboard.add(keyboardButtons);
 
         keyboardButtons=new KeyboardRow();
-        keyboardButtons.add("Configuracion");
+        keyboardButtons.add("Opciones");
         listKeyboard.add(keyboardButtons);
 
         keyboardButtons=new KeyboardRow();
@@ -204,6 +221,20 @@ public class    MainBot extends TelegramLongPollingBot {
         keyboardButtons.add("Registrar horario");
         listKeyboard.add(keyboardButtons);
         keyboard.setKeyboard(listKeyboard);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Ver horarios");
+        listKeyboard.add(keyboardButtons);
+        keyboard.setKeyboard(listKeyboard);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Opciones: horario");
+        listKeyboard.add(keyboardButtons);
+        keyboard.setKeyboard(listKeyboard);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Volver: modo cliente");
+        listKeyboard.add(keyboardButtons);
 
         return keyboard;
     }
@@ -256,18 +287,24 @@ public class    MainBot extends TelegramLongPollingBot {
         keyboardButtons=new KeyboardRow();
         keyboardButtons.add("Horario de Atencion");
         listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Volver: modo cliente");
+        listKeyboard.add(keyboardButtons);
+
         keyboard.setKeyboard(listKeyboard);
+
 
         return keyboard;
     }
 
 
-    //public String getBotUsername() { return "BotRestaurant_Bot"; }
-    public String getBotUsername(){return "NefertitiBot";}
+    public String getBotUsername() { return "BotRestaurant_Bot"; }
+    //public String getBotUsername(){return "NefertitiBot";}
 
 
     @Override
-    //public String getBotToken() { return "941260126:AAHg7GOLiBUxbFP14QsgcWENfu0Qt_dP7mc"; }
-    public String getBotToken() {return "852637482:AAHRFn6er6MknsLoMnysO6rlTILVzON6ipE";}
+    public String getBotToken() { return "941260126:AAHg7GOLiBUxbFP14QsgcWENfu0Qt_dP7mc"; }
+    //public String getBotToken() {return "852637482:AAHRFn6er6MknsLoMnysO6rlTILVzON6ipE";}
 }
 

@@ -101,6 +101,10 @@ public class BotBl {
                         responses = listResponses(30, lastMessage.getMessageId(), update.getMessage().getText(), update);
                         break;
 
+                    case "Registrar horario":
+                        responses = listResponses(31, 1, update.getMessage().getText(), update);
+                        break;
+
                     default:
                         responses = listResponses(lastMessage.getConversationId(), lastMessage.getMessageId(), update.getMessage().getText(), update);
                         break;
@@ -185,6 +189,20 @@ public class BotBl {
                     responsesReturn.setResponses("Usted no tiene un restaurante registrado");
                 }
                 break;
+            case 31:
+                responsesReturn=switchTimeTable(31,message,messagereceived,update,cpuser);
+                break;
+            case 32:
+                if (existsRestaurant(cpuser)){
+                    LOGGER.info("El usuario: "+update.getMessage().getChatId()+" Si tiene registrado un restaurante En la conversacion: "+conversation);
+                    responsesReturn=switchMenuIngresarRestaurant(32,message,messagereceived,update);
+                }else{
+                    LOGGER.info("El usuario: "+update.getMessage().getChatId()+" NO tiene registrado un restaurante");
+
+                    responsesReturn.setConversation(conversation);
+                    responsesReturn.setMessage(1);
+                    responsesReturn.setResponses("Usted no tiene un restaurante registrado");
+                }                break;
             case 40:
                 LOGGER.info("Ingresando a la conversacion: "+conversation);
 
@@ -204,20 +222,34 @@ public class BotBl {
     }
 
 
+    private ResponsesReturn switchOpcionesHorario(int conversation,int message, String messagereceived, Update update){
+        ResponsesReturn responsesReturn=new ResponsesReturn();
+
+        switch (message){
+            case 1:
+                responsesReturn.setResponses("Opciones de horario");
+                responsesReturn.setConversation(31);
+                responsesReturn.setMessage(2);
+                break;
+
+        }
+        return responsesReturn;
+    }
+
     private ResponsesReturn switchMenuIngresarRestaurant(int conversation,int message, String messagereceived, Update update){
         ResponsesReturn responsesReturn=new ResponsesReturn();
 
         switch (message){
             case 1:
                 responsesReturn.setResponses("Ingresaste a tu restaurante");
-                responsesReturn.setConversation(conversation);
+                responsesReturn.setConversation(30);
                 responsesReturn.setMessage(2);
                 break;
             case 2:
                 responsesReturn.setResponses(update.getMessage().getText());
-                responsesReturn.setMessage(2);
-                responsesReturn.setConversation(conversation);
-
+                responsesReturn.setMessage(1);
+                responsesReturn.setConversation(31);
+                break;
         }
         return responsesReturn;
     }
@@ -337,26 +369,27 @@ public class BotBl {
             case 1:
                 responsesReturn.setResponses("Ingrese el dia");
                 responsesReturn.setMessage(2);
-                responsesReturn.setConversation(conversation);
+                responsesReturn.setConversation(31);
                 break;
             case 2:
                 responsesReturn.setResponses("Ingrese la hora de apertura hh:mm");
                 responsesReturn.setMessage(3);
-                responsesReturn.setConversation(conversation);
+                responsesReturn.setConversation(31);
                 break;
             case 3:
                 responsesReturn.setResponses("Ingrese la hora de cierre hh:mm");
                 responsesReturn.setMessage(4);
-                responsesReturn.setConversation(conversation);
+                responsesReturn.setConversation(31);
+               /* */
                 break;
             case 4:
-                responsesReturn.setResponses("Ingrese la calle en la que se encuentra su restaruante");
-                responsesReturn.setMessage(5);
-                responsesReturn.setConversation(conversation);
+                responsesReturn.setResponses("El horario del restaurante se guardo");
+                responsesReturn.setMessage(1);
+                responsesReturn.setConversation(32);
                 Timetable timetable=null;
                 timetable=returnTimeTable(cpuser,messagereceived);
-                cpRestaurantRepository.save(restaurant);
-                break;
+                cpTimeTableRepository.save(timetable);
+            break;
         }
         return  responsesReturn;
     }
@@ -364,26 +397,26 @@ public class BotBl {
     private Timetable returnTimeTable(Cpuser cpuser, String lastmessage){
         Timetable timetable=new Timetable();
         ArrayList<Chat> listRegisterTimeTable=new ArrayList<>();
+        Restaurant restaurant2=cpRestaurantRepository.findPersonId(cpuser.getPersonId().getPersonId());
 
-        for (int i=0;i<4;i++){
-            Chat chat=cpChatRepository.findMessageAndConversationByUserId(cpuser.getUserId(),10,i+1);
+        for (int i=0;i<3;i++){
+            Chat chat=cpChatRepository.findMessageAndConversationByUserId(cpuser.getUserId(),31,i+3);
+            //LOGGER.info("El user: "+cpuser+ "  conversation: "+31+"  message: "+(i+3)+ " inmessage: "+chat.getInMessage());
             listRegisterTimeTable.add(chat);
         }
 
         LOGGER.info(listRegisterTimeTable.get(0).getInMessage());
         LOGGER.info(listRegisterTimeTable.get(1).getInMessage());
-        LOGGER.info(listRegisterTimeTable.get(2).getInMessage());
-        LOGGER.info(listRegisterTimeTable.get(3).getInMessage());
 
         String open=listRegisterTimeTable.get(1).getInMessage();
         String[] vopen=open.split(":");
 
-        String close=listRegisterTimeTable.get(1).getInMessage();
+        String close=lastmessage;
         String[] vclose=close.split(":");
         timetable.setDay(listRegisterTimeTable.get(0).getInMessage());
         timetable.setOpeningTime(new Time(Integer.parseInt(vopen[0]), Integer.parseInt(vopen[1]),00));
         timetable.setClosingTime(new Time(Integer.parseInt(vclose[0]), Integer.parseInt(vclose[1]),00));
-
+        timetable.setRestaurantId(restaurant2);
         return timetable;
     }
 
@@ -458,5 +491,7 @@ public class BotBl {
         }
 
     }
+
+
 
 }
