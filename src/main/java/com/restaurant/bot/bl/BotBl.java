@@ -154,6 +154,9 @@ public class BotBl {
                 responsesReturn=switchMenuBuscar(message,messagereceived,update);
 
                 break;
+            case 11:
+                responsesReturn=switchmenuComida(message, messagereceived, update) ;
+                break;
             case 20:
 
                 //LOGGER.info("Ingresando a la conversacion: "+conversation);
@@ -204,6 +207,7 @@ public class BotBl {
     }
 
 
+
     private ResponsesReturn switchMenuIngresarRestaurant(int conversation,int message, String messagereceived, Update update){
         ResponsesReturn responsesReturn=new ResponsesReturn();
 
@@ -245,12 +249,27 @@ public class BotBl {
                 break;
             case 2:
                 responsesReturn.setResponses("Ingresa tu ubicacion");
-                responsesReturn.setConversation(11);
+                responsesReturn.setConversation(10);
                 responsesReturn.setMessage(3);
                 break;
             case 3:
                 Restaurant restaurant = cpRestaurantRepository.findAllBy();
-                responsesReturn.setResponses("El Resultado es: "+ Ubicacion.distance(-16.497129,-68.128690, Double.parseDouble(restaurant.getLatitude()),Double.parseDouble(restaurant.getLongitude())));
+                responsesReturn.setResponses("El Resultado es: "+ Ubicacion.distance(-16.497129,-68.128690,  -16.523160, -68.112129));
+
+        }
+        return responsesReturn;
+    }
+    private ResponsesReturn switchmenuComida(int message, String messagereceived, Update update) {
+        ResponsesReturn responsesReturn=new ResponsesReturn();
+        switch (message){
+            case 1:
+                responsesReturn.setResponses("Escoge el tipo de comida buscas");
+                responsesReturn.setMessage(2);
+                responsesReturn.setConversation(11);
+                break;
+            case 2:
+                responsesReturn.setResponses("Buscando Comida");
+
 
         }
         return responsesReturn;
