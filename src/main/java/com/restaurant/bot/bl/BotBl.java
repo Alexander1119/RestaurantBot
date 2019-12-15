@@ -239,10 +239,14 @@ public class BotBl {
                 responsesReturn.setConversation(10);
                 break;
             case 2:
-                responsesReturn.setResponses(update.getMessage().getText());
-                responsesReturn.setConversation(10);
-                responsesReturn.setMessage(2);
+                responsesReturn.setResponses("Ingresa tu ubicacion");
+                responsesReturn.setConversation(11);
+                responsesReturn.setMessage(3);
                 break;
+            case 3:
+                Restaurant restaurant = cpRestaurantRepository.findAllBy();
+                responsesReturn.setResponses("El Resultado es: "+ Ubicacion.distance(-16.497129,-68.128690, Double.parseDouble(restaurant.getLatitude()),Double.parseDouble(restaurant.getLongitude())));
+
         }
         return responsesReturn;
     }

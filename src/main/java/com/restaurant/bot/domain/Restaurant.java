@@ -190,7 +190,7 @@ public class Restaurant implements Serializable {
         this.images = images;
     }
 
-    public BigDecimal getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
@@ -198,7 +198,7 @@ public class Restaurant implements Serializable {
         this.longitude = longitude;
     }
 
-    public BigDecimal getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 

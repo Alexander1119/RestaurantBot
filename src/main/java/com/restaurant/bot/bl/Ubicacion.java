@@ -3,7 +3,7 @@ package com.restaurant.bot.bl;
 
 public class Ubicacion {
 
-    public static boolean distance(double latp, double lonp, double latg, double lon){
+    public static String distance(double latp, double lonp, double latg, double lon){
         final int R = 6371; //radio total de la tierra en kilometros;
 
         Double latDistance = Math.toRadians(latg - latp);
@@ -23,12 +23,12 @@ public class Ubicacion {
         //double height = elg-elp;
 
         //distance=Math.pow(distance, 2); //+ Math.pow(height, 2);
-*/      boolean status = false;
+*/      String status = null;
         double validator=compare(distance);
         if (validator>0){
-            status=true;
+            status="true";
         }else{
-            status=false;
+            status="false";
         }
         return status;
     }
@@ -42,5 +42,4 @@ public class Ubicacion {
             return 0;
         }
     }
-
 }
