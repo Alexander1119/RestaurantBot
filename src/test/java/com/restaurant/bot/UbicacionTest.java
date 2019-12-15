@@ -13,9 +13,9 @@ public class UbicacionTest {
 
     @Test
     public void distancia(){
-        final Double expected = 2603.566315959424;
+        final boolean expected = true;
 
-        final Double actual = Ubicacion.distance(-16.52326,-68.11182, -16.47311, -68.15140);
+        final boolean actual = Ubicacion.distance(-16.497129,-68.128690, -16.523160, -68.112129);
         System.out.println(actual);
         Assert.assertEquals(actual, expected);
     }
