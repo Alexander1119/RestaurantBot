@@ -5,6 +5,7 @@ import com.restaurant.bot.domain.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.util.List;
 
@@ -18,4 +19,7 @@ public interface CpRestaurantRepository extends JpaRepository<Restaurant,Integer
 
     @Query(value = "select * from restaurant where time1?1 between opening_time and closing_time",nativeQuery = true)
     public List<Restaurant> findByRestaurantBetweenHora(Time time1);
+
+
+    List <Restaurant> findByRestaurantId (int restaurantid);
 }

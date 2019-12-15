@@ -281,5 +281,13 @@ public class Restaurant implements Serializable {
     public String toString() {
         return "com.restaurant.bot.domain.Restaurant[ restaurantId=" + restaurantId + " ]";
     }
-    
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
 }
