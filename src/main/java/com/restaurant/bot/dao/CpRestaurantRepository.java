@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface CpRestaurantRepository extends JpaRepository<Restaurant,Integer> {
 
-    @Query(value = "select * from restaurant where person_id=?1 order by chat_id desc LIMIT 1",nativeQuery = true)
-    public Person findPersonId(Integer person_id);
+    @Query(value = "select * from restaurant where person_id=?1 ",nativeQuery = true)
+    public Restaurant findPersonId(Integer person_id);
 }

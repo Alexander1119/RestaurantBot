@@ -89,11 +89,16 @@ public class BotBl {
 
                         break;
                     case "Ingresar Restaurante":
+                       // responses = new ResponsesReturn("Ingresaste como restaruante",20,1);
                         responses = listResponses(30, lastMessage.getMessageId(), update.getMessage().getText(), update);
 
                         break;
                     case "Opciones Cliente":
                         responses = listResponses(40, lastMessage.getMessageId(), update.getMessage().getText(), update);
+                        break;
+
+                    case "Volver: modo cliente":
+                        responses = listResponses(20, lastMessage.getMessageId(), update.getMessage().getText(), update);
                         break;
                     default:
                         responses = listResponses(lastMessage.getConversationId(), lastMessage.getMessageId(), update.getMessage().getText(), update);
@@ -134,6 +139,8 @@ public class BotBl {
     private ResponsesReturn listResponses(int conversation,int message, String messagereceived, Update update){
         ResponsesReturn responsesReturn=new ResponsesReturn();
         RestaurantBl restaurantBl;
+        Cpuser cpuser = cpUSerRepository.findByBotUserId(update.getMessage().getChatId().toString());
+
         switch (conversation){
             case 0:
                 //Conversacion inicial para un usuario nuevo en el bot
@@ -141,26 +148,46 @@ public class BotBl {
                         "\nSus datos son los siguientes\n"+
                         update.getMessage().getFrom().getFirstName()+"  "+update.getMessage().getFrom().getLastName());
                 responsesReturn.setMessage(1);
-                responsesReturn.setConversation(20);
+                responsesReturn.setConversation(10);
                 break;
             case 10:
                 responsesReturn=switchMenuBuscar(message,messagereceived,update);
 
                 break;
             case 20:
+
+                //LOGGER.info("Ingresando a la conversacion: "+conversation);
+
                 //Conversacion para el usuario que desea registrar un restaurante
 
                 //Se obtiene el person de la tabla user con el Chat_id que llega del update, para guardar
                 //en la tabla restaurant
-                Cpuser cpuser = cpUSerRepository.findByBotUserId(update.getMessage().getChatId().toString());
-                responsesReturn = switchRegisterRestaurant(conversation, message, messagereceived, update, cpuser);
+                if(existsRestaurant(cpuser)){
+                    responsesReturn.setConversation(30);
+                    responsesReturn.setMessage(1);
+                    responsesReturn.setResponses("Usted ya tiene registrado un restaurante");
+                    LOGGER.info("El usuario: "+update.getMessage().getChatId()+" Si tiene registrado un restaurante   En la conversacion:"+conversation);
 
+                }else{
+                    responsesReturn = switchRegisterRestaurant(conversation, message, messagereceived, update, cpuser);
+                }
                 break;
             case 30:
-                responsesReturn=switchMenuRestaurant(conversation,message,messagereceived,update);
+                LOGGER.info("Ingresando a la conversacion: "+conversation);
+                if (existsRestaurant(cpuser)){
+                    LOGGER.info("El usuario: "+update.getMessage().getChatId()+" Si tiene registrado un restaurante En la conversacion: "+conversation);
+                    responsesReturn=switchMenuIngresarRestaurant(conversation,message,messagereceived,update);
+                }else{
+                    LOGGER.info("El usuario: "+update.getMessage().getChatId()+" NO tiene registrado un restaurante");
 
+                    responsesReturn.setConversation(conversation);
+                    responsesReturn.setMessage(1);
+                    responsesReturn.setResponses("Usted no tiene un restaurante registrado");
+                }
                 break;
             case 40:
+                LOGGER.info("Ingresando a la conversacion: "+conversation);
+
                 responsesReturn=switchMenuConfiguracion(message,messagereceived,update);
 
                 break;
@@ -176,14 +203,28 @@ public class BotBl {
         return responsesReturn;
     }
 
+
+    private ResponsesReturn switchMenuIngresarRestaurant(int conversation,int message, String messagereceived, Update update){
+        ResponsesReturn responsesReturn=new ResponsesReturn();
+
+        switch (message){
+            case 1:
+                responsesReturn.setResponses("Ingresaste a tu restaurante");
+                responsesReturn.setConversation(conversation);
+                responsesReturn.setMessage(1);
+                break;
+        }
+        return responsesReturn;
+    }
+
     private ResponsesReturn switchMenuConfiguracion(int message, String messagereceived, Update update){
         ResponsesReturn responsesReturn=new ResponsesReturn();
 
         switch (message){
             case 1:
                 responsesReturn.setResponses("Ingresaste a configuracion");
-                responsesReturn.setConversation(1);
-                responsesReturn.setMessage(20);
+                responsesReturn.setConversation(30);
+                responsesReturn.setMessage(1);
                 break;
         }
         return responsesReturn;
@@ -193,13 +234,15 @@ public class BotBl {
 
         switch (message){
             case 1:
-                responsesReturn.setResponses("Ingresaaste Buscar restaurante");
+                responsesReturn.setResponses("Ingresaste Buscar restaurante");
                 responsesReturn.setMessage(1);
                 responsesReturn.setConversation(10);
             case 2:
                 responsesReturn.setResponses(update.getMessage().getText());
                 responsesReturn.setConversation(10);
                 responsesReturn.setMessage(2);
+                responsesReturn.setConversation(30);
+                break;
         }
         return responsesReturn;
     }
@@ -402,6 +445,14 @@ public class BotBl {
         return cpuser;
     }
 
+    private boolean existsRestaurant(Cpuser cpuser){
 
+        if (cpRestaurantRepository.findPersonId(cpuser.getPersonId().getPersonId())!=null){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
 
 }
