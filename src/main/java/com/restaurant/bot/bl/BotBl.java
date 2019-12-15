@@ -1,5 +1,6 @@
 package com.restaurant.bot.bl;
 
+import com.google.inject.internal.cglib.reflect.$FastConstructor;
 import com.restaurant.bot.ResponsesReturn;
 import com.restaurant.bot.dao.*;
 
@@ -83,7 +84,9 @@ public class BotBl {
                     case "Buscar restaurantes":
                         responses = listResponses(10, lastMessage.getMessageId(), update.getMessage().getText(), update);
                         break;
-
+                    case "Horario de Atencion":
+                        responses = listResponses(12, lastMessage.getMessageId(), update.getMessage().getText(), update);
+                        break;
                     case "Registrar restaurante":
                         responses = listResponses(20, lastMessage.getMessageId(), update.getMessage().getText(), update);
 
@@ -104,7 +107,9 @@ public class BotBl {
                     case "Registrar horario":
                         responses = listResponses(31, 1, update.getMessage().getText(), update);
                         break;
-
+                    case "Registrar menu":
+                        responses = listResponses(34, 1, update.getMessage().getText(), update);
+                        break;
                     default:
                         responses = listResponses(lastMessage.getConversationId(), lastMessage.getMessageId(), update.getMessage().getText(), update);
                         break;
@@ -161,6 +166,9 @@ public class BotBl {
             case 11:
                 responsesReturn=switchmenuComida(message, messagereceived, update) ;
                 break;
+            case 12:
+                responsesReturn=switchBuscarPorHorario(12,message, messagereceived, update);
+                break;
             case 20:
 
                 //LOGGER.info("Ingresando a la conversacion: "+conversation);
@@ -205,7 +213,11 @@ public class BotBl {
                     responsesReturn.setConversation(conversation);
                     responsesReturn.setMessage(1);
                     responsesReturn.setResponses("Usted no tiene un restaurante registrado");
-                }                break;
+                }
+                break;
+           /* case 34:
+                responsesReturn=(31,message,messagereceived,update,cpuser);
+*/
             case 40:
                 LOGGER.info("Ingresando a la conversacion: "+conversation);
 
@@ -224,6 +236,41 @@ public class BotBl {
         return responsesReturn;
     }
 
+    private ResponsesReturn switchBuscarPorHorario(int conversation,int message, String messagereceived, Update update){
+        ResponsesReturn responsesReturn=new ResponsesReturn();
+
+        switch (message){
+
+            case 1:
+                responsesReturn.setResponses("Ingrese la hora de busqueda hh:mm");
+                responsesReturn.setConversation(12);
+                responsesReturn.setMessage(2);
+            case 2:
+
+                if (ListRestaurantHora()== true){
+                    responsesReturn.setResponses("SI existen restaurantes");
+
+                }else{
+                    responsesReturn.setResponses("NO existen restaurantes");
+
+                }
+                responsesReturn.setConversation(10);
+                responsesReturn.setMessage(2);
+                break;
+
+        }
+        return responsesReturn;
+    }
+
+    public boolean ListRestaurantHora(){
+
+        List<Restaurant> restaurantList= cpRestaurantRepository.findByRestaurantBetweenHora(new Time(10,30,00));
+        if (restaurantList.size()==0){
+            return false;
+        }else{
+            return true;
+        }
+    }
 
     private ResponsesReturn switchOpcionesHorario(int conversation,int message, String messagereceived, Update update){
         ResponsesReturn responsesReturn=new ResponsesReturn();
@@ -269,6 +316,7 @@ public class BotBl {
         }
         return responsesReturn;
     }
+
     private ResponsesReturn switchMenuBuscar(int message, String messagereceived, Update update){
         ResponsesReturn responsesReturn=new ResponsesReturn();
 
@@ -278,15 +326,16 @@ public class BotBl {
                 responsesReturn.setMessage(2);
                 responsesReturn.setConversation(10);
                 break;
+/*
             case 2:
-                responsesReturn.setResponses("Ingresa tu ubicacion");
+                responsesReturn.setResponses(update.getMessage().getText());
                 responsesReturn.setConversation(10);
-                responsesReturn.setMessage(3);
+                responsesReturn.setMessage(2);
                 break;
             case 3:
                 Restaurant restaurant = cpRestaurantRepository.findAllBy();
                 responsesReturn.setResponses("El Resultado es: "+ Ubicacion.distance(-16.497129,-68.128690,  -16.523160, -68.112129));
-
+*/
         }
         return responsesReturn;
     }
@@ -407,7 +456,7 @@ public class BotBl {
             case 4:
                 responsesReturn.setResponses("El horario del restaurante se guardo");
                 responsesReturn.setMessage(1);
-                responsesReturn.setConversation(32);
+                responsesReturn.setConversation(30);
                 Timetable timetable=null;
                 timetable=returnTimeTable(cpuser,messagereceived);
                 cpTimeTableRepository.save(timetable);

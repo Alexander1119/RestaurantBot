@@ -195,6 +195,14 @@ public class    MainBot extends TelegramLongPollingBot {
         listKeyboard.add(keyboardButtons);
 
         keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Ver menus");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Ver comidas");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
         keyboardButtons.add("Registrar horario");
         listKeyboard.add(keyboardButtons);
         keyboard.setKeyboard(listKeyboard);
@@ -204,16 +212,9 @@ public class    MainBot extends TelegramLongPollingBot {
         listKeyboard.add(keyboardButtons);
 
         keyboardButtons=new KeyboardRow();
-        keyboardButtons.add("Ver menus");
-        listKeyboard.add(keyboardButtons);
-
-        keyboardButtons=new KeyboardRow();
         keyboardButtons.add("Registrar comida");
         listKeyboard.add(keyboardButtons);
 
-        keyboardButtons=new KeyboardRow();
-        keyboardButtons.add("Ver comidas");
-        listKeyboard.add(keyboardButtons);
 
         keyboardButtons=new KeyboardRow();
         keyboardButtons.add("Opciones");
