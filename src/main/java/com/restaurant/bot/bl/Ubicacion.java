@@ -35,7 +35,7 @@ public class Ubicacion {
 
     private static double compare(double distance) {
         double km = distance;
-        if(km<3){
+        if(km<5){
             return km;
         }
         else{

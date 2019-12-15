@@ -195,7 +195,11 @@ public class BotBl {
             case 1:
                 responsesReturn.setResponses("Ingresaaste Buscar restaurante");
                 responsesReturn.setMessage(1);
-                responsesReturn.setConversation(20);
+                responsesReturn.setConversation(10);
+            case 2:
+                responsesReturn.setResponses(update.getMessage().getText());
+                responsesReturn.setConversation(10);
+                responsesReturn.setMessage(2);
         }
         return responsesReturn;
     }
