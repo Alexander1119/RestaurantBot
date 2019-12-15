@@ -22,6 +22,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,10 +79,18 @@ public class    MainBot extends TelegramLongPollingBot {
         }*/
 
       /*  if(responses.getConversation()==20 &&  responses.getMessage()==7 ){
+        //private static final Logger LOGGER= LoggerFactory.getLogger(MainBot.class);
+/*
+        if(responses.getConversation()==20 &&  responses.getMessage()==7 ){
             //replyKeyboardMarkup=menuInitialRestaurant();
-            float latitud=update.getMessage().getLocation().getLatitude();
-            float longitud=update.getMessage().getLocation().getLongitude();
+            BigDecimal latitud = new BigDecimal(update.getMessage().getLocation().getLatitude());
+            BigDecimal longitud=new BigDecimal(update.getMessage().getLocation().getLongitude());
             ubi=latitud+"@"+longitud;
+            if(ubi!=null){
+                LOGGER.info(update.getMessage().getText());
+            }else{
+                System.out.println("Ha caray" );
+            }
         }*/
         if(responses.getConversation()==30 && responses.getMessage()==2 ){
             replyKeyboardMarkup=menuInitialRestaurant();
@@ -98,6 +107,12 @@ public class    MainBot extends TelegramLongPollingBot {
         }/*if(responses.getConversation()==32 && responses.getMessage()==1){
             replyKeyboardMarkup=menuDays();
         }*/
+        if(responses.getConversation()==11 && responses.getMessage()==2){
+            replyKeyboardMarkup=menuInitialComida();
+        }
+
+
+        LOGGER.info("numero de Registro es = "+numberRegistro);
 
         //manda el mensaje de respuesta al usuario
         for (ResponsesReturn messageText : listMessage) {
@@ -298,6 +313,76 @@ public class    MainBot extends TelegramLongPollingBot {
         return keyboard;
     }
 
+    private ReplyKeyboardMarkup menuInitialComida(){
+        ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+        ArrayList<KeyboardRow> listKeyboard=new ArrayList<KeyboardRow>();
+
+        KeyboardRow keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Buscar por Ubicsdasfacion");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Buscar Comiddsasfa");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Horario de Atsadasdfasencion");
+        listKeyboard.add(keyboardButtons);
+        /*KeyboardRow keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Acompaniamientos");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Almuerzo");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Bebidas");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Bocadillos");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Cena");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Comida a la Olla");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Desayuno");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Ensalada");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Panaderia y Masitas");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Pizza");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Platillos Principales");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Sandwiches");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Sopas");
+        listKeyboard.add(keyboardButtons);*/
+
+        keyboard.setKeyboard(listKeyboard);
+        return keyboard;
+    }
 
     public String getBotUsername() { return "BotRestaurant_Bot"; }
     //public String getBotUsername(){return "NefertitiBot";}

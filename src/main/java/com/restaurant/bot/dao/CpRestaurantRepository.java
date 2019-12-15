@@ -9,4 +9,7 @@ public interface CpRestaurantRepository extends JpaRepository<Restaurant,Integer
 
     @Query(value = "select * from restaurant where person_id=?1 ",nativeQuery = true)
     public Restaurant findPersonId(Integer person_id);
+
+    @Query(value = "Select * from restaurant where restaurant_id=1", nativeQuery = true)
+    public Restaurant findAllBy();
 }
