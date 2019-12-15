@@ -79,7 +79,7 @@ public class BotBl {
             //Si el usuario ya tiene mensajes controla las respuestas que
             // debe tener dependiendo del mensaje recibido
 
-                switch (update.getMessage().getText()){
+                switch(update.getMessage().getText()){
                     case "Buscar restaurantes":
                         responses = listResponses(10, lastMessage.getMessageId(), update.getMessage().getText(), update);
                         break;
@@ -98,13 +98,13 @@ public class BotBl {
                         break;
 
                     case "Volver: modo cliente":
-                        responses = listResponses(20, lastMessage.getMessageId(), update.getMessage().getText(), update);
+                        responses = listResponses(30, lastMessage.getMessageId(), update.getMessage().getText(), update);
                         break;
+
                     default:
                         responses = listResponses(lastMessage.getConversationId(), lastMessage.getMessageId(), update.getMessage().getText(), update);
                         break;
                 }
-
 
            /* if(update.getMessage().getText()=="Registrar restaurante"){
                 responses = listResponses(1, lastMessage.getMessageId(), update.getMessage().getText(), update);
@@ -211,8 +211,13 @@ public class BotBl {
             case 1:
                 responsesReturn.setResponses("Ingresaste a tu restaurante");
                 responsesReturn.setConversation(conversation);
-                responsesReturn.setMessage(1);
+                responsesReturn.setMessage(2);
                 break;
+            case 2:
+                responsesReturn.setResponses(update.getMessage().getText());
+                responsesReturn.setMessage(2);
+                responsesReturn.setConversation(conversation);
+
         }
         return responsesReturn;
     }
@@ -417,7 +422,6 @@ public class BotBl {
         restaurant.setPersonId(cpuser.getPersonId());
         return restaurant;
     }
-
 
     //Metodo donde busca si el usuario de telegram esta registrado o no
     private Cpuser initUser(User user) {

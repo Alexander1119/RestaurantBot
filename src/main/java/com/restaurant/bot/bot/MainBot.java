@@ -30,7 +30,7 @@ public class    MainBot extends TelegramLongPollingBot {
     private static final Logger LOGGER= LoggerFactory.getLogger(MainBot.class);
     int numberRegistro=0;
     BotBl botBl;
-
+    String ubi;
     public MainBot(BotBl customerBl) {
         this.botBl = customerBl;
     }
@@ -76,7 +76,14 @@ public class    MainBot extends TelegramLongPollingBot {
         if(responses.getConversation()==3 && responses.getMessage()==1){
             replyKeyboardMarkup=menuTimeTable();
         }*/
-        if(responses.getConversation()==30 && responses.getMessage()==1 ){
+
+        if(responses.getConversation()==20 &&  responses.getMessage()==7 ){
+            //replyKeyboardMarkup=menuInitialRestaurant();
+            float latitud=update.getMessage().getLocation().getLatitude();
+            float longitud=update.getMessage().getLocation().getLongitude();
+            ubi=latitud+"@"+longitud;
+        }
+        if(responses.getConversation()==30 && responses.getMessage()==2 ){
             replyKeyboardMarkup=menuInitialRestaurant();
         }
         if((responses.getConversation()==10 || responses.getConversation()==20 || responses.getConversation()==30 || responses.getConversation()==40) && responses.getMessage()==1 ){
