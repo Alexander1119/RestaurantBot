@@ -74,18 +74,14 @@ public class    MainBot extends TelegramLongPollingBot {
         if(responses.getConversation()==3 && responses.getMessage()==1){
             replyKeyboardMarkup=menuTimeTable();
         }*/
-        if(responses.getConversation()==20 && responses.getMessage()==1 && numberRegistro==0){
-
-                replyKeyboardMarkup=menuInitialNewUser();
-                numberRegistro++;
+        if(responses.getConversation()==30 && responses.getMessage()==1 ){
+            replyKeyboardMarkup=menuInitialRestaurant();
         }
-         if(responses.getConversation()==30 && responses.getMessage()==1 && numberRegistro!=0){
-            replyKeyboardMarkup=menuInitialUserRestaurant();
+        if((responses.getConversation()==10 || responses.getConversation()==20 || responses.getConversation()==30 || responses.getConversation()==40) && responses.getMessage()==1 ){
+            replyKeyboardMarkup=menuInitialUser();
         }
-        LOGGER.info("numero de Registro es = "+numberRegistro);
         //manda el mensaje de respuesta al usuario
         for (ResponsesReturn messageText : listMessage) {
-
             SendMessage message = new SendMessage()
                     .setChatId(update.getMessage().getChatId())
                     .setText(messageText.getResponses());
@@ -103,26 +99,28 @@ public class    MainBot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
         }
-
     }
 
 
     //Metodo donde definimos el menu de botones para un usuario-cliente
-    private ReplyKeyboardMarkup menuInitialNewUser(){
+    private ReplyKeyboardMarkup menuInitialUser(){
         ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
         ArrayList<KeyboardRow> listKeyboard=new ArrayList<KeyboardRow>();
-
 
         KeyboardRow keyboardButtons=new KeyboardRow();
         keyboardButtons.add("Buscar restaurantes");
         listKeyboard.add(keyboardButtons);
 
         keyboardButtons=new KeyboardRow();
-        keyboardButtons.add("Registrar restaurante");
+        keyboardButtons.add("Opciones Cliente");
         listKeyboard.add(keyboardButtons);
 
         keyboardButtons=new KeyboardRow();
-        keyboardButtons.add("Opciones Cliente");
+        keyboardButtons.add("Ingresar restaurante");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Registrar restaurante");
         listKeyboard.add(keyboardButtons);
 
         keyboard.setKeyboard(listKeyboard);
@@ -154,7 +152,6 @@ public class    MainBot extends TelegramLongPollingBot {
 
     //Lista de botones para cuando ingresa un usuario en
     //modo restaurante
-
     private ReplyKeyboardMarkup menuInitialRestaurant(){
         ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
         ArrayList<KeyboardRow> listKeyboard=new ArrayList<KeyboardRow>();
@@ -173,6 +170,10 @@ public class    MainBot extends TelegramLongPollingBot {
 
         keyboardButtons=new KeyboardRow();
         keyboardButtons.add("Configuracion");
+        listKeyboard.add(keyboardButtons);
+
+        keyboardButtons=new KeyboardRow();
+        keyboardButtons.add("Volver: modo cliente");
         listKeyboard.add(keyboardButtons);
 
         keyboard.setKeyboard(listKeyboard);
@@ -242,7 +243,6 @@ public class    MainBot extends TelegramLongPollingBot {
         listKeyboard.add(keyboardButtons);
         return keyboard;
     }
-
 
     public String getBotUsername() { return "BotRestaurant_Bot"; }
     //public String getBotUsername(){return "NefertitiBot";}

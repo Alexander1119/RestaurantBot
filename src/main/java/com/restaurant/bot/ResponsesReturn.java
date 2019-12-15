@@ -13,6 +13,12 @@ public class ResponsesReturn {
         this.message = step;
     }
 
+    public ResponsesReturn(String responses, int conversation, int message) {
+        this.responses = responses;
+        this.conversation = conversation;
+        this.message = message;
+    }
+
     public String getResponses() {
         return responses;
     }
