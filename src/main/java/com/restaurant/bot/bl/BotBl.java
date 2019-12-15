@@ -235,13 +235,13 @@ public class BotBl {
         switch (message){
             case 1:
                 responsesReturn.setResponses("Ingresaste Buscar restaurante");
-                responsesReturn.setMessage(1);
+                responsesReturn.setMessage(2);
                 responsesReturn.setConversation(10);
+                break;
             case 2:
                 responsesReturn.setResponses(update.getMessage().getText());
                 responsesReturn.setConversation(10);
                 responsesReturn.setMessage(2);
-                responsesReturn.setConversation(30);
                 break;
         }
         return responsesReturn;

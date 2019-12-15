@@ -83,7 +83,7 @@ public class    MainBot extends TelegramLongPollingBot {
             replyKeyboardMarkup=menuInitialUser();
         }
 
-         if(responses.getConversation()==10 && responses.getMessage()==1){
+         if(responses.getConversation()==10 && responses.getMessage()==2){
              replyKeyboardMarkup=menuInitialBusqueda();
          }
         LOGGER.info("numero de Registro es = "+numberRegistro);
@@ -249,6 +249,8 @@ public class    MainBot extends TelegramLongPollingBot {
         keyboardButtons=new KeyboardRow();
         keyboardButtons.add("Horario de Atencion");
         listKeyboard.add(keyboardButtons);
+        keyboard.setKeyboard(listKeyboard);
+
         return keyboard;
     }
 
